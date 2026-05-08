@@ -1,0 +1,24 @@
+{
+  "name": "defimath-compare",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gas and precision benchmarks comparing defimath against other Solidity math and options libraries.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MerkleBlue/defimath-compare"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "npx hardhat test"
+  },
+  "dependencies": {
+    "defimath-lib": "^1.0.3"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.2",
+    "hardhat": "^2.28.6",
+    "black-scholes": "1.1.0",
+    "greeks": "1.0.0",
+    "math-erf": "1.0.0"
+  }
+}
