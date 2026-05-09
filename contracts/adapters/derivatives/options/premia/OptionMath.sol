@@ -4,7 +4,6 @@
 pragma solidity ^0.8.0;
 
 import {ABDKMath64x64} from "./lib/ABDKMath64x64.sol";
-import "hardhat/console.sol";
 
 library OptionMath {
     using ABDKMath64x64 for int128;

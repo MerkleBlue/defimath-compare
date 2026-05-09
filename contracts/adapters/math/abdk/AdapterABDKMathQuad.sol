@@ -3,7 +3,6 @@ pragma solidity ^0.8.34;
 
 import "./lib/ABDKMathQuad.sol";
 
-import "hardhat/console.sol";
 
 contract AdapterABDKMath {
 
