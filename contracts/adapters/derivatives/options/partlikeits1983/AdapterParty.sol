@@ -8,7 +8,7 @@ contract AdapterParty {
     function callPrice(
         uint128 spot,
         uint128 strike,
-        uint32 timeToExpirySec,
+        uint32 timeToExp,
         uint64 volatility,
         uint64 rate
     ) external view returns (uint256 price, uint256 gasUsed) {
@@ -17,7 +17,7 @@ contract AdapterParty {
         uint256 endGas;
         int256 result;
 
-        uint256 timeYear = uint256(timeToExpirySec) * 1e18 / 31536000;
+        uint256 timeYear = uint256(timeToExp) * 1e18 / 31536000;
 
         BS.BlackScholesInput memory inputs = BS.BlackScholesInput(
             int256(int128(spot)),
@@ -41,7 +41,7 @@ contract AdapterParty {
     function putPrice(
         uint128 spot,
         uint128 strike,
-        uint32 timeToExpirySec,
+        uint32 timeToExp,
         uint64 volatility,
         uint64 rate
     ) external view returns (uint256 price, uint256 gasUsed) {
@@ -50,7 +50,7 @@ contract AdapterParty {
         uint256 endGas;
         int256 result;
 
-        uint256 timeYear = uint256(timeToExpirySec) * 1e18 / 31536000;
+        uint256 timeYear = uint256(timeToExp) * 1e18 / 31536000;
 
         BS.BlackScholesInput memory inputs = BS.BlackScholesInput(
             int256(int128(spot)),
@@ -75,14 +75,14 @@ contract AdapterParty {
     function delta(
         uint128 spot,
         uint128 strike,
-        uint32 timeToExpirySec,
+        uint32 timeToExp,
         uint64 volatility,
         uint64 rate
     ) external view returns (int256 deltaCall, uint256 gasUsed) {
         uint256 startGas;
         uint256 endGas;
 
-        uint256 timeYear = uint256(timeToExpirySec) * 1e18 / 31536000;
+        uint256 timeYear = uint256(timeToExp) * 1e18 / 31536000;
 
         BS.BlackScholesInput memory inputs = BS.BlackScholesInput(
             int256(int128(spot)),

@@ -51,14 +51,14 @@ library BlackScholes {
     }
 
     /**
-     * @param timeToExpirySec Number of seconds to the expiry of the option
+     * @param timeToExp Number of seconds to the expiry of the option
      * @param volatilityDecimal Implied volatility over the period til expiry as a percentage
      * @param spotDecimal The current price of the base asset
      * @param strikePriceDecimal The strikePrice price of the option
      * @param rateDecimal The percentage risk free rate + carry cost
      */
     struct BlackScholesInputs {
-        uint timeToExpirySec;
+        uint timeToExp;
         uint volatilityDecimal;
         uint spotDecimal;
         uint strikePriceDecimal;
@@ -99,7 +99,7 @@ library BlackScholes {
      * @dev Returns call and put prices for options with given parameters.
      */
     function optionPrices(BlackScholesInputs memory bsInput) public pure returns(uint call, uint put) {
-        uint tAnnualised = _annualise(bsInput.timeToExpirySec);
+        uint tAnnualised = _annualise(bsInput.timeToExp);
         uint spotPrecise = bsInput.spotDecimal.decimalToPreciseDecimal();
         uint strikePricePrecise = bsInput.strikePriceDecimal.decimalToPreciseDecimal();
         int ratePrecise = bsInput.rateDecimal.decimalToPreciseDecimal();
@@ -118,7 +118,7 @@ library BlackScholes {
      * @dev Returns call/put prices and delta/stdVega for options with given parameters.
      */
     function pricesDeltaStdVega(BlackScholesInputs memory bsInput) public pure returns(PricesDeltaStdVega memory) {
-        uint tAnnualised = _annualise(bsInput.timeToExpirySec);
+        uint tAnnualised = _annualise(bsInput.timeToExp);
         uint spotPrecise = bsInput.spotDecimal.decimalToPreciseDecimal();
 
         (int d1, int d2) = _d1d2(
@@ -136,7 +136,7 @@ library BlackScholes {
             d1,
             d2
         );
-        (uint vegaPrecise, uint stdVegaPrecise) = _standardVega(d1, spotPrecise, bsInput.timeToExpirySec);
+        (uint vegaPrecise, uint stdVegaPrecise) = _standardVega(d1, spotPrecise, bsInput.timeToExp);
         (int callDelta, int putDelta) = _delta(d1);
 
         return
@@ -155,7 +155,7 @@ library BlackScholes {
      */
 
     function delta(BlackScholesInputs memory bsInput) public pure returns(int callDeltaDecimal, int putDeltaDecimal) {
-        uint tAnnualised = _annualise(bsInput.timeToExpirySec);
+        uint tAnnualised = _annualise(bsInput.timeToExp);
         uint spotPrecise = bsInput.spotDecimal.decimalToPreciseDecimal();
 
         (int d1, ) = _d1d2(
@@ -174,7 +174,7 @@ library BlackScholes {
      * @dev Returns non-normalized vega given parameters. Quoted in cents.
      */
     function vega(BlackScholesInputs memory bsInput) public pure returns(uint vegaDecimal) {
-        uint tAnnualised = _annualise(bsInput.timeToExpirySec);
+        uint tAnnualised = _annualise(bsInput.timeToExp);
         uint spotPrecise = bsInput.spotDecimal.decimalToPreciseDecimal();
 
         (int d1, ) = _d1d2(
@@ -290,18 +290,18 @@ library BlackScholes {
      * @dev Returns the option's vega value with expiry modified to be at least VEGA_STANDARDISATION_MIN_DAYS
      * @param d1 Internal coefficient of Black-Scholes
      * @param spot The current price of the base asset
-     * @param timeToExpirySec Number of seconds to expiry
+     * @param timeToExp Number of seconds to expiry
      */
-    function _standardVega(int d1, uint spot, uint timeToExpirySec) internal pure returns(uint, uint) {
-        uint tAnnualised = _annualise(timeToExpirySec);
-        uint normalisationFactor = _getVegaNormalisationFactorPrecise(timeToExpirySec);
+    function _standardVega(int d1, uint spot, uint timeToExp) internal pure returns(uint, uint) {
+        uint tAnnualised = _annualise(timeToExp);
+        uint normalisationFactor = _getVegaNormalisationFactorPrecise(timeToExp);
         uint vegaPrecise = _vega(tAnnualised, spot, d1);
         return (vegaPrecise, vegaPrecise.multiplyDecimalRoundPrecise(normalisationFactor));
     }
 
-    function _getVegaNormalisationFactorPrecise(uint timeToExpirySec) internal pure returns(uint) {
-        timeToExpirySec = timeToExpirySec < VEGA_STANDARDISATION_MIN_DAYS ? VEGA_STANDARDISATION_MIN_DAYS : timeToExpirySec;
-        uint daysToExpiry = timeToExpirySec / 1 days;
+    function _getVegaNormalisationFactorPrecise(uint timeToExp) internal pure returns(uint) {
+        timeToExp = timeToExp < VEGA_STANDARDISATION_MIN_DAYS ? VEGA_STANDARDISATION_MIN_DAYS : timeToExp;
+        uint daysToExpiry = timeToExp / 1 days;
         uint thirty = 30 * PRECISE_UNIT;
         return _sqrtPrecise(thirty / daysToExpiry) / 100;
     }

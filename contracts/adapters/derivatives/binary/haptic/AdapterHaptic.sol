@@ -9,7 +9,7 @@ contract AdapterHaptic {
     function callPrice(
         uint128 spot,
         uint128 strike,
-        uint32 timeToExpirySec,
+        uint32 timeToExp,
         uint64 volatility,
         uint64 rate
     ) external view returns (uint256 price, uint256 gasUsed) {
@@ -18,7 +18,7 @@ contract AdapterHaptic {
         uint256 endGas;
 
         BlackScholes.BlackScholesInputs memory inputs = BlackScholes.BlackScholesInputs(
-            timeToExpirySec,
+            timeToExp,
             volatility,
             spot,
             strike,
@@ -36,7 +36,7 @@ contract AdapterHaptic {
     function putPrice(
         uint128 spot,
         uint128 strike,
-        uint32 timeToExpirySec,
+        uint32 timeToExp,
         uint64 volatility,
         uint64 rate
     ) external view returns (uint256 price, uint256 gasUsed) {
@@ -45,7 +45,7 @@ contract AdapterHaptic {
         uint256 endGas;
 
         BlackScholes.BlackScholesInputs memory inputs = BlackScholes.BlackScholesInputs(
-            timeToExpirySec,
+            timeToExp,
             volatility,
             spot,
             strike,

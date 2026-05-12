@@ -17,7 +17,7 @@ library Binaries {
     function _cashOrNothingPrices(
         BlackScholes.BlackScholesInputs memory bsInput
     ) internal pure returns(uint call, uint put) {
-        uint tAnnualised = BlackScholes._annualise(bsInput.timeToExpirySec);
+        uint tAnnualised = BlackScholes._annualise(bsInput.timeToExp);
         int ratePrecise = bsInput.rateDecimal.decimalToPreciseDecimal();
         (, int d2) = BlackScholes._d1d2(
             tAnnualised,
@@ -40,7 +40,7 @@ library Binaries {
     function _assetOrNothingPrices(
         BlackScholes.BlackScholesInputs memory bsInput
     ) internal pure returns(uint call, uint put) {
-        uint tAnnualised = BlackScholes._annualise(bsInput.timeToExpirySec);
+        uint tAnnualised = BlackScholes._annualise(bsInput.timeToExp);
         int ratePrecise = bsInput.rateDecimal.decimalToPreciseDecimal();
         uint spotPrecise = bsInput.spotDecimal.decimalToPreciseDecimal();
 
