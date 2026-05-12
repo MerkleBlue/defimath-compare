@@ -7,14 +7,14 @@ function binaryCallWrapped(spot, strike, timeSec, vol, rate) {
   if (timeSec <= 0) {
     return spot > strike ? 1 : 0;
   }
-  return new OptionsJS().getBinaryCallPrice(spot, strike, timeSec, vol, rate);
+  return new OptionsJS().binaryCallPrice(spot, strike, timeSec, vol, rate);
 }
 
 function binaryPutWrapped(spot, strike, timeSec, vol, rate) {
   if (timeSec <= 0) {
     return strike > spot ? 1 : 0;
   }
-  return new OptionsJS().getBinaryPutPrice(spot, strike, timeSec, vol, rate);
+  return new OptionsJS().binaryPutPrice(spot, strike, timeSec, vol, rate);
 }
 
 describe("DeFiMathBinary", function () {
@@ -53,7 +53,7 @@ describe("DeFiMathBinary", function () {
             for (const rate of rates) {
               const expected = binaryCallWrapped(1000, strike, time * SEC_IN_DAY, vol, rate);
 
-              const result1 = await binary.getBinaryCallPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await binary.binaryCallPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.price.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -91,7 +91,7 @@ describe("DeFiMathBinary", function () {
             for (const rate of rates) {
               const expected = binaryPutWrapped(1000, strike, time * SEC_IN_DAY, vol, rate);
 
-              const result1 = await binary.getBinaryPutPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await binary.binaryPutPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.price.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 

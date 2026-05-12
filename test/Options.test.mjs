@@ -58,7 +58,7 @@ describe("DeFiMathOptions", function () {
             for (const rate of rates) {
               const expected = blackScholesWrapped(1000, strike, time / 365, vol, rate, "call");
 
-              const result1 = await options.getCallOptionPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await options.callOptionPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.price.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -111,7 +111,7 @@ describe("DeFiMathOptions", function () {
             for (const rate of rates) {
               const expected = blackScholesWrapped(1000, strike, time / 365, vol, rate, "put");
 
-              const result1 = await options.getPutOptionPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await options.putOptionPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.price.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -163,7 +163,7 @@ describe("DeFiMathOptions", function () {
             for (const rate of rates) {
               const expected = greeks.getDelta(1000, strike, time / 365, vol, rate, "call");
 
-              const result1 = await options.getDeltaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await options.deltaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.deltaCall.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -206,7 +206,7 @@ describe("DeFiMathOptions", function () {
             for (const rate of rates) {
               const expected = greeks.getGamma(1000, strike, time / 365, vol, rate, "call");
 
-              const result1 = await options.getGammaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await options.gammaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.gamma.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -239,7 +239,7 @@ describe("DeFiMathOptions", function () {
             for (const rate of rates) {
               const expected = greeks.getTheta(1000, strike, time / 365, vol, rate, "call");
 
-              const result1 = await options.getThetaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await options.thetaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.thetaCall.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -272,7 +272,7 @@ describe("DeFiMathOptions", function () {
             for (const rate of rates) {
               const expected = greeks.getVega(1000, strike, time / 365, vol, rate, "call");
 
-              const result1 = await options.getVegaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await options.vegaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.vega.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
