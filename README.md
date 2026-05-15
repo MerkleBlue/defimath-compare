@@ -34,6 +34,84 @@ Avg gas            2927      13404   20831      36243   89728
   ✔ call
 ```
 
+## Results — Math primitives
+
+### Gas (average over input sweep)
+
+| Function     |    DeFiMath | PRBMath | ABDKQuad |  Solady | SolStat |
+| :----------- | ----------: | ------: | -------: | ------: | ------: |
+| `exp`        |     **333** |   2,820 |    5,840 |     372 |       — |
+| `ln`         |     **375** |   6,901 |   12,695 |     518 |       — |
+| `log2`       |     **391** |   6,828 |   12,271 |       — |       — |
+| `log10`      |     **391** |   8,626 |        — |       — |       — |
+| `pow`        |     **750** |   9,792 |        — |     976 |       — |
+| `sqrt`       |     **245** |     959 |      808 |     341 |       — |
+| `stdNormCDF` |     **731** |       — |        — |       — |   2,794 |
+| `erf`        |     **685** |       — |        — |       — |   1,732 |
+| `expm1` †    |         439 |   2,735 |    5,851 | **372** |       — |
+| `log1p` †    |     **500** |   6,842 |   13,228 |     518 |       — |
+
+### Max relative error (%)
+
+| Function     |    DeFiMath |     PRBMath |    ABDKQuad |      Solady |  SolStat |
+| :----------- | ----------: | ----------: | ----------: | ----------: | -------: |
+| `exp`        |     5.1e-12 | **1.9e-12** | **1.9e-12** | **1.9e-12** |        — |
+| `ln`         |     1.5e-12 | **1.3e-12** |     1.6e-12 |     1.6e-12 |        — |
+| `log2`       |     1.5e-12 | **1.3e-12** |     1.6e-12 |           — |        — |
+| `log10`      |     1.4e-12 | **1.3e-12** |           — |           — |        — |
+| `pow`        |     5.2e-12 | **6.1e-14** |           — | **6.1e-14** |        — |
+| `sqrt`       | **2.8e-14** | **2.8e-14** | **2.8e-14** | **2.8e-14** |        — |
+| `stdNormCDF` | **4.7e-13** |           — |           — |           — |   3.2e-6 |
+| `erf`        | **7.4e-13** |           — |           — |           — |   5.7e-6 |
+| `expm1` †    |     9.9e-12 | **1.2e-12** | **1.2e-12** | **1.2e-12** |        — |
+| `log1p` †    | **7.0e-13** |     2.3e-11 |     5.1e-12 |     3.6e-12 |        — |
+
+† Competitors don't ship `expm1` / `log1p` natively; their numbers reflect the naive `exp(x) − 1` and `ln(1 + x)` formulas. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`.
+
+## Results — European options (Black-Scholes + Greeks)
+
+### Gas (average over spot × strike × time × vol × rate sweep)
+
+| Function | DeFiMath  | Derivexyz | Premia | Party1983 |  Dopex |
+| :------- | --------: | --------: | -----: | --------: | -----: |
+| `call`   | **2,887** |    13,360 | 20,623 |    35,963 | 88,969 |
+| `put`    | **2,898** |    13,363 | 20,791 |    36,140 | 88,301 |
+| `delta`  | **1,807** |     8,621 |      — |    24,960 |      — |
+| `gamma`  | **1,509** |         — |      — |         — |      — |
+| `theta`  | **3,451** |         — |      — |         — |      — |
+| `vega`   | **1,449** |     7,490 |      — |         — |      — |
+
+### Max absolute error (option price at $1,000 spot, unit Greeks)
+
+| Function | DeFiMath    | Derivexyz   | Premia | Party1983 | Dopex |
+| :------- | ----------: | ----------: | -----: | --------: | ----: |
+| `call`   |     5.6e-12 | **6.8e-13** | 1.7e-1 |     3.8e1 |     — |
+| `put`    |     5.4e-12 | **6.5e-13** | 1.7e-1 |     9.9e1 |     — |
+| `delta`  |     6.9e-15 | **6.7e-16** |      — |     9.2e-1|     — |
+| `gamma`  | **9.1e-17** |          — |      — |         — |     — |
+| `theta`  | **3.7e-14** |          — |      — |         — |     — |
+| `vega`   |     4.8e-14 | **1.1e-15** |      — |         — |     — |
+
+Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/Options.test.mjs`](test/Options.test.mjs); reproduce with `npx hardhat test test/Options.test.mjs`.
+
+## Results — Binary (cash-or-nothing) options
+
+### Gas (average over spot × strike × time × vol × rate sweep)
+
+| Function | DeFiMath  | Haptic |
+| :------- | --------: | -----: |
+| `call`   | **2,102** | 16,218 |
+| `put`    | **2,107** | 16,221 |
+
+### Max absolute error (unit payout)
+
+| Function | DeFiMath | Haptic      |
+| :------- | -------: | ----------: |
+| `call`   |  5.7e-15 | **1.3e-15** |
+| `put`    |  5.4e-15 | **1.2e-15** |
+
+Haptic is the only on-chain binary-options implementation we found. DeFiMath wins gas by ~7.7× and is within ~4× on precision (both well below ulp at unit payout). Greeks aren't benchmarked here because Haptic doesn't implement them; see [defimath's README](https://github.com/MerkleBlue/defimath) for DeFiMath's binary greeks. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`.
+
 ## Layout
 
 ```

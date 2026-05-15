@@ -282,5 +282,151 @@ describe("DeFiMath", function () {
       console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "    " + (avgGas4 / count).toFixed(0));
     });
+
+    it("expm1", async function () {
+      const { deFiMath, prbMath, abdkMath, solady } = await loadFixture(deployCompare);
+
+      let maxError1 = 0, maxError2 = 0, maxError3 = 0, maxError4 = 0;
+      let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
+      let count = 0;
+      const ONE = 10n ** 18n;
+
+      // sweep wide range plus small-x Taylor branch
+      const xs = [];
+      for (let x = -1; x <= 1; x += 0.0137) xs.push(x);
+      for (let x = -0.005; x <= 0.005; x += 0.00013) xs.push(x);
+
+      for (const x of xs) {
+        const expected = Math.expm1(x);
+        if (Math.abs(expected) < 1e-12) continue;
+
+        // DeFiMath: native expm1 (precision-preserving)
+        const r1 = await deFiMath.expm1MG(tokens(x));
+        const y1 = Number(BigInt(r1.y.toString())) / 1e18;
+        avgGas1 += parseInt(r1.gasUsed);
+
+        // Competitors: naive expm1 = exp(x) - 1 (BigInt subtraction preserves on-chain precision)
+        const r2 = await prbMath.expMG(tokens(x));
+        const y2 = Number(BigInt(r2.y.toString()) - ONE) / 1e18;
+        avgGas2 += parseInt(r2.gasUsed);
+
+        const r3 = await abdkMath.expMG(tokens(x));
+        const y3 = Number(BigInt(r3.y.toString()) - ONE) / 1e18;
+        avgGas3 += parseInt(r3.gasUsed);
+
+        const r4 = await solady.expMG(tokens(x));
+        const y4 = Number(BigInt(r4.y.toString()) - ONE) / 1e18;
+        avgGas4 += parseInt(r4.gasUsed);
+
+        count++;
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
+        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+      }
+      console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
+      console.log("Max rel error (%) ", maxError1.toExponential(1) + "  ", maxError2.toExponential(1) + "  ", maxError3.toExponential(1) + "  ", maxError4.toExponential(1));
+      console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "     " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
+    });
+
+    it("log1p", async function () {
+      const { deFiMath, prbMath, abdkMath, solady } = await loadFixture(deployCompare);
+
+      let maxError1 = 0, maxError2 = 0, maxError3 = 0, maxError4 = 0;
+      let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
+      let count = 0;
+
+      // sweep domain (x > -1) plus small-x Taylor branch
+      const xs = [];
+      for (let x = -0.5; x <= 1; x += 0.0137) xs.push(x);
+      for (let x = -0.005; x <= 0.005; x += 0.00013) xs.push(x);
+
+      for (const x of xs) {
+        const expected = Math.log1p(x);
+        if (Math.abs(expected) < 1e-12) continue;
+
+        // DeFiMath: native log1p (precision-preserving)
+        const r1 = await deFiMath.log1pMG(tokens(x));
+        const y1 = Number(BigInt(r1.y.toString())) / 1e18;
+        avgGas1 += parseInt(r1.gasUsed);
+
+        // Competitors: naive log1p = ln(1 + x)
+        const onePlusX = tokens(1 + x);
+
+        const r2 = await prbMath.lnMG(onePlusX);
+        const y2 = Number(BigInt(r2.y.toString())) / 1e18;
+        avgGas2 += parseInt(r2.gasUsed);
+
+        const r3 = await abdkMath.lnMG(onePlusX);
+        const y3 = Number(BigInt(r3.y.toString())) / 1e18;
+        avgGas3 += parseInt(r3.gasUsed);
+
+        const r4 = await solady.lnMG(onePlusX);
+        const y4 = Number(BigInt(r4.y.toString())) / 1e18;
+        avgGas4 += parseInt(r4.gasUsed);
+
+        count++;
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
+        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+      }
+      console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
+      console.log("Max rel error (%) ", maxError1.toExponential(1) + "  ", maxError2.toExponential(1) + "  ", maxError3.toExponential(1) + "  ", maxError4.toExponential(1));
+      console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "    " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
+    });
+
+    it("expm1 / log1p extreme small-x probe", async function () {
+      const { deFiMath, prbMath, abdkMath, solady } = await loadFixture(deployCompare);
+      const ONE = 10n ** 18n;
+
+      const probes = [1e-3, 1e-5, 1e-7, 1e-9, 1e-11, 1e-13];
+
+      console.log("\n--- expm1: rel error (%) per x ---");
+      console.log("x".padEnd(10), "DeFiMath".padStart(11), "PRBMath".padStart(11), "ABDK".padStart(11), "Solady".padStart(11));
+      for (const x of probes) {
+        const expected = Math.expm1(x);
+
+        const r1 = await deFiMath.expm1MG(tokens(x));
+        const y1 = Number(BigInt(r1.y.toString())) / 1e18;
+
+        const r2 = await prbMath.expMG(tokens(x));
+        const y2 = Number(BigInt(r2.y.toString()) - ONE) / 1e18;
+
+        const r3 = await abdkMath.expMG(tokens(x));
+        const y3 = Number(BigInt(r3.y.toString()) - ONE) / 1e18;
+
+        const r4 = await solady.expMG(tokens(x));
+        const y4 = Number(BigInt(r4.y.toString()) - ONE) / 1e18;
+
+        const e = (y) => (Math.abs((y - expected) / expected) * 100).toExponential(1);
+        console.log(x.toExponential(0).padEnd(10), e(y1).padStart(11), e(y2).padStart(11), e(y3).padStart(11), e(y4).padStart(11));
+      }
+
+      console.log("\n--- log1p: rel error (%) per x ---");
+      console.log("x".padEnd(10), "DeFiMath".padStart(11), "PRBMath".padStart(11), "ABDK".padStart(11), "Solady".padStart(11));
+      for (const x of probes) {
+        const expected = Math.log1p(x);
+
+        const r1 = await deFiMath.log1pMG(tokens(x));
+        const y1 = Number(BigInt(r1.y.toString())) / 1e18;
+
+        // build (1 + x) as fixed-point BigInt to bypass JS Number precision at extreme small x
+        const xFixed = BigInt(Math.round(x * 1e18));
+        const onePlusX = (ONE + xFixed).toString();
+
+        const r2 = await prbMath.lnMG(onePlusX);
+        const y2 = Number(BigInt(r2.y.toString())) / 1e18;
+
+        const r3 = await abdkMath.lnMG(onePlusX);
+        const y3 = Number(BigInt(r3.y.toString())) / 1e18;
+
+        const r4 = await solady.lnMG(onePlusX);
+        const y4 = Number(BigInt(r4.y.toString())) / 1e18;
+
+        const e = (y) => (Math.abs((y - expected) / expected) * 100).toExponential(1);
+        console.log(x.toExponential(0).padEnd(10), e(y1).padStart(11), e(y2).padStart(11), e(y3).padStart(11), e(y4).padStart(11));
+      }
+    });
   });
 });

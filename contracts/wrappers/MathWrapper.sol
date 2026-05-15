@@ -180,7 +180,21 @@ contract MathWrapper {
         y = DeFiMath.erf(x);
 
         endGas = gasleft();
-        
+
+        return (y, startGas - endGas);
+    }
+
+    function expm1MG(int256 x) external view returns (int256 y, uint256 gasUsed) {
+        uint256 startGas = gasleft();
+        y = DeFiMath.expm1(x);
+        uint256 endGas = gasleft();
+        return (y, startGas - endGas);
+    }
+
+    function log1pMG(int256 x) external view returns (int256 y, uint256 gasUsed) {
+        uint256 startGas = gasleft();
+        y = DeFiMath.log1p(x);
+        uint256 endGas = gasleft();
         return (y, startGas - endGas);
     }
 }
