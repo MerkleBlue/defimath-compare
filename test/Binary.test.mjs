@@ -110,5 +110,56 @@ describe("DeFiMathBinary", function () {
       console.log("Max abs error  ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
       console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "    " + (avgGas2 / count).toFixed(0));
     });
+
+    // Binary greeks — Haptic does not implement them, DeFiMath-only.
+    const greekGrid = {
+      strikes: [800, 900, 1000.01, 1100, 1200],
+      times: [7, 30, 60, 90, 180],
+      vols: [0.4, 0.6, 0.8],
+      rates: [0.05, 0.1, 0.2],
+    };
+
+    async function benchGreek(label, contractFn, jsRef, callKey, putKey) {
+      let maxError = 0, avgGas = 0, count = 0;
+      const optionsJS = new OptionsJS();
+      for (const strike of greekGrid.strikes) {
+        for (const time of greekGrid.times) {
+          for (const vol of greekGrid.vols) {
+            for (const rate of greekGrid.rates) {
+              const exp = jsRef.call(optionsJS, 1000, strike, time * SEC_IN_DAY, vol, rate);
+              const r = await contractFn(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const actCall = Number(BigInt(r[0].toString())) / 1e18;
+              const actPut = Number(BigInt(r[1].toString())) / 1e18;
+              avgGas += parseInt(r.gasUsed);
+              count++;
+              maxError = Math.max(maxError, Math.abs(actCall - exp[callKey]), Math.abs(actPut - exp[putKey]));
+            }
+          }
+        }
+      }
+      console.log("Metric         DeFiMath  Haptic");
+      console.log("Max abs error  ", maxError.toExponential(1), "       —");
+      console.log("Avg gas           ", (avgGas / count).toFixed(0), "       —");
+    }
+
+    it("delta", async function () {
+      const { binary } = await loadFixture(deployCompare);
+      await benchGreek("delta", binary.binaryDeltaMG.bind(binary), OptionsJS.prototype.binaryDelta, "deltaCall", "deltaPut");
+    });
+
+    it("gamma", async function () {
+      const { binary } = await loadFixture(deployCompare);
+      await benchGreek("gamma", binary.binaryGammaMG.bind(binary), OptionsJS.prototype.binaryGamma, "gammaCall", "gammaPut");
+    });
+
+    it("theta", async function () {
+      const { binary } = await loadFixture(deployCompare);
+      await benchGreek("theta", binary.binaryThetaMG.bind(binary), OptionsJS.prototype.binaryTheta, "thetaCall", "thetaPut");
+    });
+
+    it("vega", async function () {
+      const { binary } = await loadFixture(deployCompare);
+      await benchGreek("vega", binary.binaryVegaMG.bind(binary), OptionsJS.prototype.binaryVega, "vegaCall", "vegaPut");
+    });
   });
 });
