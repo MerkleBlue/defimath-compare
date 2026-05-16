@@ -14,6 +14,7 @@ DeFiMath is benchmarked against:
 | Options     | Derivexyz, Premia, Party1983, Dopex |
 | Binary      | Haptic |
 | Rates       | — (no other on-chain implementations found) |
+| Statistics  | — (no other on-chain implementations found) |
 
 Each function is measured for:
 - **Average gas** (over a typical input range)
@@ -137,6 +138,24 @@ We found no other on-chain interest-rate libraries to benchmark against, so this
 
 `internalRateOfReturn` gas scales with cashflow count; the figure above averages over scenarios of 2–5 cashflows. Grids and parameters match [`test/Rates.test.mjs`](test/Rates.test.mjs); reproduce with `npx hardhat test test/Rates.test.mjs`.
 
+## Results — Statistics
+
+We found no other on-chain statistics libraries to benchmark against, so this section reports DeFiMath measurements only. Array-input functions are measured on 30-element inputs; their gas scales with input length.
+
+| Function                 | Avg gas | Max rel error (%) |
+| :------------------------ | ------: | ----------------: |
+| `geometricMean`           |     330 |           1.2e-14 |
+| `mean`                    |   6,980 |           1.7e-14 |
+| `stdDev`                  |  15,298 |           4.2e-14 |
+| `weightedAverage`         |  15,687 |           2.8e-14 |
+| `historicalVolatility`    |  26,135 |           1.6e-12 |
+| `sharpeRatio`             |  26,273 |           2.2e-12 |
+| `maxDrawdown`             |  15,191 |           9.9e-14 |
+| `valueAtRisk`             |  36,752 |           1.9e-12 |
+| `conditionalValueAtRisk`  |  32,917 |           2.5e-12 |
+
+`valueAtRisk` precision is measured against `simple-statistics`' `quantile`; all others against direct JavaScript reference implementations. Grids and parameters match [`test/Stats.test.mjs`](test/Stats.test.mjs); reproduce with `npx hardhat test test/Stats.test.mjs`.
+
 ## Layout
 
 ```
@@ -151,6 +170,7 @@ test/
   Options.test.mjs    Compare suite for European option pricing + Greeks + IV.
   Binary.test.mjs     Compare suite for cash-or-nothing binary options.
   Rates.test.mjs      Measure suite for interest-rate functions (DeFiMath-only).
+  Stats.test.mjs      Measure suite for statistics functions (DeFiMath-only).
   Common.test.mjs     Shared helpers (tokens, time constants, etc.).
 poc/blackscholes/optionsJS.mjs    JS reference implementation, used as truth
                                    for binary-option precision comparisons.
