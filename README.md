@@ -13,6 +13,7 @@ DeFiMath is benchmarked against:
 | Math        | PRBMath, ABDK, Solady, SolStat |
 | Options     | Derivexyz, Premia, Party1983, Dopex |
 | Binary      | Haptic |
+| Rates       | — (no other on-chain implementations found) |
 
 Each function is measured for:
 - **Average gas** (over a typical input range)
@@ -120,6 +121,22 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 
 Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~7.7×; Haptic edges precision by ~4×, both well below ulp at unit payout. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`.
 
+## Results — Interest & rates
+
+We found no other on-chain interest-rate libraries to benchmark against, so this section reports DeFiMath measurements only.
+
+| Function               | Avg gas | Max rel error (%) |
+| :--------------------- | ------: | ----------------: |
+| `compoundInterest`     |     467 |           2.8e-12 |
+| `presentValue`         |     519 |           2.8e-12 |
+| `logReturn`            |     591 |           7.1e-14 |
+| `continuousToDiscrete` |     509 |           2.4e-12 |
+| `discreteToContinuous` |     590 |           5.1e-14 |
+| `yieldToMaturity`      |     736 |           2.7e-12 |
+| `internalRateOfReturn` |  13,476 |           3.7e-13 |
+
+`internalRateOfReturn` gas scales with cashflow count; the figure above averages over scenarios of 2–5 cashflows. Grids and parameters match [`test/Rates.test.mjs`](test/Rates.test.mjs); reproduce with `npx hardhat test test/Rates.test.mjs`.
+
 ## Layout
 
 ```
@@ -133,6 +150,7 @@ test/
   Math.test.mjs       Compare suite for the DeFiMath math library.
   Options.test.mjs    Compare suite for European option pricing + Greeks + IV.
   Binary.test.mjs     Compare suite for cash-or-nothing binary options.
+  Rates.test.mjs      Measure suite for interest-rate functions (DeFiMath-only).
   Common.test.mjs     Shared helpers (tokens, time constants, etc.).
 poc/blackscholes/optionsJS.mjs    JS reference implementation, used as truth
                                    for binary-option precision comparisons.
