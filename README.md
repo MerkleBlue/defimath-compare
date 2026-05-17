@@ -113,14 +113,14 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 
 | Function          | DeFiMath    | Haptic      |
 | :---------------- | ----------: | ----------: |
-| `binaryCallPrice` |     5.7e-15 | **1.3e-15** |
-| `binaryPutPrice`  |     5.4e-15 | **1.2e-15** |
-| `binaryDelta`     | **1.2e-16** |           — |
+| `binaryCallPrice` |     6.2e-15 | **5.6e-16** |
+| `binaryPutPrice`  |     5.9e-15 | **5.6e-16** |
+| `binaryDelta`     | **1.3e-16** |           — |
 | `binaryGamma`     | **1.5e-18** |           — |
-| `binaryTheta`     | **8.2e-16** |           — |
-| `binaryVega`      | **2.7e-16** |           — |
+| `binaryTheta`     | **8.3e-16** |           — |
+| `binaryVega`      | **2.9e-16** |           — |
 
-Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~7.7×; Haptic edges precision by ~4×, both well below ulp at unit payout. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`.
+Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~7.7×; Haptic edges price precision by ~11×, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`.
 
 ## Results — Interest & rates
 
@@ -172,9 +172,11 @@ test/
   Rates.test.mjs      Measure suite for interest-rate functions (DeFiMath-only).
   Stats.test.mjs      Measure suite for statistics functions (DeFiMath-only).
   Common.test.mjs     Shared helpers (tokens, time constants, etc.).
-poc/blackscholes/optionsJS.mjs    JS reference implementation, used as truth
-                                   for binary-option precision comparisons.
 ```
+
+Precision references are independent of DeFiMath's algorithms: `black-scholes` /
+`greeks` / `math-erf` (npm), `simple-statistics` (npm), and inline true-math
+implementations (`Math.log` / `Math.exp` / `Math.sqrt`).
 
 ## How it works
 

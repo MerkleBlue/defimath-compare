@@ -1,20 +1,59 @@
 
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
-import { OptionsJS } from "../poc/blackscholes/optionsJS.mjs";
+import erf from "math-erf";
 import { SEC_IN_DAY, tokens } from "./Common.test.mjs";
+
+// True-math binary (cash-or-nothing) Black-Scholes reference.
+//
+// This is an INDEPENDENT oracle: it uses Math.log / Math.exp / Math.sqrt and the
+// math-erf package (the same erf reference the Math suite validates against).
+// It does NOT reuse any DeFiMath algorithm — so precision measured against it is
+// true mathematical error, not self-consistency with the Solidity implementation.
+//
+// Conventions match DeFiMath: unit payout, theta per day, vega per 1% vol move.
+const SECONDS_IN_YEAR = 31536000;
+
+const normCDF = (x) => 0.5 * (1 + erf(x / Math.SQRT2));
+const normPDF = (x) => Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
+
+function binaryRef(spot, strike, timeSec, vol, rate) {
+  const timeYear = timeSec / SECONDS_IN_YEAR;
+  const scaledVol = vol * Math.sqrt(timeYear) + 1e-16;   // + 1e-16 to avoid division by zero
+  const scaledRate = rate * timeYear;
+
+  const d1 = (scaledRate + scaledVol * scaledVol / 2 - Math.log(strike / spot)) / scaledVol;
+  const d2 = d1 - scaledVol;
+  const discount = Math.exp(-scaledRate);                // e^(-r·τ)
+  const phi = normPDF(d2);                               // φ(d2)
+
+  const deltaCall = discount * phi / (spot * scaledVol);
+  const gammaCall = -discount * phi * d1 / (spot * spot * scaledVol * scaledVol);
+  const term = discount * phi * (d1 / (2 * timeYear) - rate / scaledVol);
+  const vegaCall = -discount * phi * d1 / vol / 100;
+
+  return {
+    callPrice: discount * normCDF(d2),
+    putPrice: discount * normCDF(-d2),
+    deltaCall, deltaPut: -deltaCall,
+    gammaCall, gammaPut: -gammaCall,
+    thetaCall: (rate * discount * normCDF(d2) + term) / 365,
+    thetaPut: (rate * discount * normCDF(-d2) - term) / 365,
+    vegaCall, vegaPut: -vegaCall,
+  };
+}
 
 function binaryCallWrapped(spot, strike, timeSec, vol, rate) {
   if (timeSec <= 0) {
     return spot > strike ? 1 : 0;
   }
-  return new OptionsJS().binaryCallPrice(spot, strike, timeSec, vol, rate);
+  return binaryRef(spot, strike, timeSec, vol, rate).callPrice;
 }
 
 function binaryPutWrapped(spot, strike, timeSec, vol, rate) {
   if (timeSec <= 0) {
     return strike > spot ? 1 : 0;
   }
-  return new OptionsJS().binaryPutPrice(spot, strike, timeSec, vol, rate);
+  return binaryRef(spot, strike, timeSec, vol, rate).putPrice;
 }
 
 describe("DeFiMathBinary", function () {
@@ -119,14 +158,13 @@ describe("DeFiMathBinary", function () {
       rates: [0.05, 0.1, 0.2],
     };
 
-    async function benchGreek(label, contractFn, jsRef, callKey, putKey) {
+    async function benchGreek(contractFn, callKey, putKey) {
       let maxError = 0, avgGas = 0, count = 0;
-      const optionsJS = new OptionsJS();
       for (const strike of greekGrid.strikes) {
         for (const time of greekGrid.times) {
           for (const vol of greekGrid.vols) {
             for (const rate of greekGrid.rates) {
-              const exp = jsRef.call(optionsJS, 1000, strike, time * SEC_IN_DAY, vol, rate);
+              const exp = binaryRef(1000, strike, time * SEC_IN_DAY, vol, rate);
               const r = await contractFn(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const actCall = Number(BigInt(r[0].toString())) / 1e18;
               const actPut = Number(BigInt(r[1].toString())) / 1e18;
@@ -144,22 +182,22 @@ describe("DeFiMathBinary", function () {
 
     it("delta", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek("delta", binary.binaryDeltaMG.bind(binary), OptionsJS.prototype.binaryDelta, "deltaCall", "deltaPut");
+      await benchGreek(binary.binaryDeltaMG.bind(binary), "deltaCall", "deltaPut");
     });
 
     it("gamma", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek("gamma", binary.binaryGammaMG.bind(binary), OptionsJS.prototype.binaryGamma, "gammaCall", "gammaPut");
+      await benchGreek(binary.binaryGammaMG.bind(binary), "gammaCall", "gammaPut");
     });
 
     it("theta", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek("theta", binary.binaryThetaMG.bind(binary), OptionsJS.prototype.binaryTheta, "thetaCall", "thetaPut");
+      await benchGreek(binary.binaryThetaMG.bind(binary), "thetaCall", "thetaPut");
     });
 
     it("vega", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek("vega", binary.binaryVegaMG.bind(binary), OptionsJS.prototype.binaryVega, "vegaCall", "vegaPut");
+      await benchGreek(binary.binaryVegaMG.bind(binary), "vegaCall", "vegaPut");
     });
   });
 });
