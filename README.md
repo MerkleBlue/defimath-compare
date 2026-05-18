@@ -76,12 +76,12 @@ Avg gas            2927      13404   20831      36243   89728
 
 | Function          | DeFiMath  | Derivexyz | Premia | Party1983 |  Dopex |
 | :---------------- | --------: | --------: | -----: | --------: | -----: |
-| `callOptionPrice` | **2,887** |    13,360 | 20,623 |    35,963 | 88,969 |
-| `putOptionPrice`  | **2,898** |    13,363 | 20,791 |    36,140 | 88,301 |
-| `delta`           | **1,807** |     8,621 |      — |    24,960 |      — |
-| `gamma`           | **1,509** |         — |      — |         — |      — |
-| `theta`           | **3,451** |         — |      — |         — |      — |
-| `vega`            | **1,449** |     7,490 |      — |         — |      — |
+| `callOptionPrice` | **2,876** |    13,360 | 20,623 |    35,963 | 88,969 |
+| `putOptionPrice`  | **2,887** |    13,363 | 20,791 |    36,140 | 88,301 |
+| `delta`           | **1,797** |     8,621 |      — |    24,960 |      — |
+| `gamma`           | **1,499** |         — |      — |         — |      — |
+| `theta`           | **3,441** |         — |      — |         — |      — |
+| `vega`            | **1,439** |     7,490 |      — |         — |      — |
 
 ### Max absolute error (option price at $1,000 spot, unit Greeks)
 
@@ -89,10 +89,10 @@ Avg gas            2927      13404   20831      36243   89728
 | :---------------- | ----------: | ----------: | -----: | --------: | ----: |
 | `callOptionPrice` |     5.6e-12 | **6.8e-13** | 1.7e-1 |     3.8e1 |     — |
 | `putOptionPrice`  |     5.4e-12 | **6.5e-13** | 1.7e-1 |     9.9e1 |     — |
-| `delta`           |     6.9e-15 | **6.7e-16** |      — |    9.2e-1 |     — |
+| `delta`           |     6.2e-15 | **6.7e-16** |      — |    9.2e-1 |     — |
 | `gamma`           | **9.1e-17** |          — |      — |         — |     — |
-| `theta`           | **3.7e-14** |          — |      — |         — |     — |
-| `vega`            |     4.8e-14 | **1.1e-15** |      — |         — |     — |
+| `theta`           | **3.5e-14** |          — |      — |         — |     — |
+| `vega`            |     4.3e-14 | **1.1e-15** |      — |         — |     — |
 
 Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/Options.test.mjs`](test/Options.test.mjs); reproduce with `npx hardhat test test/Options.test.mjs`.
 
@@ -102,12 +102,12 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 
 | Function          | DeFiMath  | Haptic |
 | :---------------- | --------: | -----: |
-| `binaryCallPrice` | **2,102** | 16,218 |
-| `binaryPutPrice`  | **2,107** | 16,221 |
-| `binaryDelta`     | **1,835** |      — |
-| `binaryGamma`     | **1,977** |      — |
-| `binaryTheta`     | **3,511** |      — |
-| `binaryVega`      | **1,924** |      — |
+| `binaryCallPrice` | **2,092** | 16,218 |
+| `binaryPutPrice`  | **2,097** | 16,221 |
+| `binaryDelta`     | **1,825** |      — |
+| `binaryGamma`     | **1,967** |      — |
+| `binaryTheta`     | **3,501** |      — |
+| `binaryVega`      | **1,913** |      — |
 
 ### Max absolute error (unit payout)
 
@@ -118,7 +118,7 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 | `binaryDelta`     | **1.3e-16** |           — |
 | `binaryGamma`     | **1.5e-18** |           — |
 | `binaryTheta`     | **8.3e-16** |           — |
-| `binaryVega`      | **2.9e-16** |           — |
+| `binaryVega`      | **2.7e-16** |           — |
 
 Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~7.7×; Haptic edges price precision by ~11×, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`.
 
