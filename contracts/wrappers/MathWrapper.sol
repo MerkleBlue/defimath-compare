@@ -45,11 +45,7 @@ contract MathWrapper {
         return DeFiMath.expPositive(x);
     }
 
-    function erfPositiveHalf(uint256 x) external pure returns (uint256) {
-        return DeFiMath.erfPositiveHalf(x);
-    }
-
-    // measure gas
+    // measure gas functions
 
     function expMG(int256 x) external view returns (uint256 y, uint256 gasUsed) {
         uint256 result;
