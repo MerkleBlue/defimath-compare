@@ -77,4 +77,16 @@ contract AdapterSolady {
         return (y, gasUsed);
     }
 
+    function cbrtMG(uint256 x) external view returns (uint256 y, uint256 gasUsed) {
+        uint256 startGas;
+        uint256 endGas;
+
+        startGas = gasleft();
+        // cbrtWad is Solady's 1e18-FP cube root — direct apples-to-apples with DeFiMath.cbrt
+        y = FixedPointMathLib.cbrtWad(x);
+        endGas = gasleft();
+
+        return (y, startGas - endGas);
+    }
+
 }

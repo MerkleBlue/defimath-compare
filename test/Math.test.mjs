@@ -229,6 +229,33 @@ describe("DeFiMath", function () {
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "      " + (avgGas2 / count).toFixed(0), "      " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
+    it("cbrt", async function () {
+      const { deFiMath, solady } = await loadFixture(deployCompare);
+
+      let maxError1 = 0, maxError2 = 0;
+      let avgGas1 = 0, avgGas2 = 0;
+      let count = 0;
+
+      for (let x = 1e-4; x <= 1e4; x += x / 4) {
+        const expected = Math.cbrt(x);
+
+        const result1 = await deFiMath.cbrtMG(tokens(x));
+        const y1 = result1.y.toString() / 1e18;
+        avgGas1 += parseInt(result1.gasUsed);
+
+        const result2 = await solady.cbrtMG(tokens(x));
+        const y2 = result2.y.toString() / 1e18;
+        avgGas2 += parseInt(result2.gasUsed);
+
+        count++;
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
+      }
+      console.log("Metric            DeFiMath    Solady");
+      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
+      console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "      " + (avgGas2 / count).toFixed(0));
+    });
+
     it("stdNormCDF", async function () {
       const { deFiMath, solStat } = await loadFixture(deployCompare);
 

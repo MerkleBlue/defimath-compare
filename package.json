@@ -13,7 +13,7 @@
     "test": "npx hardhat test"
   },
   "dependencies": {
-    "defimath-lib": "^2.0.0"
+    "defimath-lib": "^3.1.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.2",
