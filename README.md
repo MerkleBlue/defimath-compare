@@ -70,7 +70,7 @@ Avg gas            2927      13404   20831      36243   89728
 | `expm1` †    |     9.9e-12 | **1.2e-12** | **1.2e-12** | **1.2e-12** |        — |
 | `log1p` †    | **7.0e-13** |     2.3e-11 |     5.1e-12 |     3.6e-12 |        — |
 
-† Competitors don't ship `expm1` / `log1p` natively; their numbers reflect the naive `exp(x) − 1` and `ln(1 + x)` formulas. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`.
+† Competitors don't ship `expm1` / `log1p` natively; their numbers reflect the naive `exp(x) − 1` and `ln(1 + x)` formulas. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
 
 ## Results — European options (Black-Scholes + Greeks)
 
@@ -96,7 +96,7 @@ Avg gas            2927      13404   20831      36243   89728
 | `theta`           | **3.5e-14** |          — |      — |         — |     — |
 | `vega`            |     4.3e-14 | **1.1e-15** |      — |         — |     — |
 
-Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/Options.test.mjs`](test/Options.test.mjs); reproduce with `npx hardhat test test/Options.test.mjs`.
+Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/Options.test.mjs`](test/Options.test.mjs); reproduce with `npx hardhat test test/Options.test.mjs`. Full module reference: [DeFiMath Black-Scholes options pricing and Greeks documentation](https://defimath.com/docs/options/).
 
 ## Results — Binary (cash-or-nothing) options
 
@@ -122,7 +122,7 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 | `binaryTheta`     | **8.3e-16** |           — |
 | `binaryVega`      | **2.7e-16** |           — |
 
-Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~7.7×; Haptic edges price precision by ~11×, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`.
+Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~7.7×; Haptic edges price precision by ~11×, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`. Full module reference: [DeFiMath binary (cash-or-nothing) options documentation](https://defimath.com/docs/binary/).
 
 ## Results — Interest & rates
 
@@ -138,7 +138,7 @@ We found no other on-chain interest-rate libraries to benchmark against, so this
 | `yieldToMaturity`      |     736 |           2.7e-12 |
 | `internalRateOfReturn` |  13,476 |           3.7e-13 |
 
-`internalRateOfReturn` gas scales with cashflow count; the figure above averages over scenarios of 2–5 cashflows. Grids and parameters match [`test/Rates.test.mjs`](test/Rates.test.mjs); reproduce with `npx hardhat test test/Rates.test.mjs`.
+`internalRateOfReturn` gas scales with cashflow count; the figure above averages over scenarios of 2–5 cashflows. Grids and parameters match [`test/Rates.test.mjs`](test/Rates.test.mjs); reproduce with `npx hardhat test test/Rates.test.mjs`. Full module reference: [DeFiMath interest rates and yield math documentation](https://defimath.com/docs/rates/).
 
 ## Results — Statistics
 
@@ -156,7 +156,7 @@ We found no other on-chain statistics libraries to benchmark against, so this se
 | `valueAtRisk`             |  36,752 |           1.9e-12 |
 | `conditionalValueAtRisk`  |  32,917 |           2.5e-12 |
 
-`valueAtRisk` precision is measured against `simple-statistics`' `quantile`; all others against direct JavaScript reference implementations. Grids and parameters match [`test/Stats.test.mjs`](test/Stats.test.mjs); reproduce with `npx hardhat test test/Stats.test.mjs`.
+`valueAtRisk` precision is measured against `simple-statistics`' `quantile`; all others against direct JavaScript reference implementations. Grids and parameters match [`test/Stats.test.mjs`](test/Stats.test.mjs); reproduce with `npx hardhat test test/Stats.test.mjs`. Full module reference: [DeFiMath statistics and risk metrics documentation](https://defimath.com/docs/statistics/).
 
 ## Layout
 
