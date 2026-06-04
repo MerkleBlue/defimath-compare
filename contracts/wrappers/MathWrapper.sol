@@ -37,6 +37,10 @@ contract MathWrapper {
         return DeFiMath.cbrt(x);
     }
 
+    function mulDiv(uint256 a, uint256 b, uint256 d) external pure returns (uint256) {
+        return DeFiMath.mulDiv(a, b, d);
+    }
+
     function stdNormCDF(int256 x) external pure returns (uint256) {
         return DeFiMath.stdNormCDF(x);
     }
@@ -143,6 +147,17 @@ contract MathWrapper {
         endGas = gasleft();
 
         return (y, startGas - endGas);
+    }
+
+    function mulDivMG(uint256 a, uint256 b, uint256 d) external view returns (uint256 z, uint256 gasUsed) {
+        uint256 startGas;
+        uint256 endGas;
+
+        startGas = gasleft();
+        z = DeFiMath.mulDiv(a, b, d);
+        endGas = gasleft();
+
+        return (z, startGas - endGas);
     }
 
     function sqrtTimeMG(uint256 x) external view returns (uint256 y, uint256 gasUsed) {

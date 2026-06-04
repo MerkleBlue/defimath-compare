@@ -229,6 +229,52 @@ describe("DeFiMath", function () {
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "      " + (avgGas2 / count).toFixed(0), "      " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
+    it("mulDiv", async function () {
+      const { deFiMath, prbMath, solady } = await loadFixture(deployCompare);
+
+      // Hand-picked input grid exercising both code paths:
+      //   - fast path: a · b fits in uint256
+      //   - slow path: a · b ≥ 2^256, full 512-bit division required
+      const cases = [
+        [1n, 1n, 1n],
+        [1000n, 2000n, 7n],
+        [12345678901234567890n, 98765432109876543210n, 1000000n],
+        [BigInt(tokens(1.5)), BigInt(tokens(2)), BigInt(tokens(1))],
+        [1n << 100n, 1n << 50n, 1n << 80n],
+        [1n << 200n, 1n << 50n, 1n << 200n],          // slow path
+        [(1n << 200n) - 1n, (1n << 100n) + 7n, (1n << 150n) + 3n],
+        [1n << 255n, 2n, 4n],
+        [(1n << 256n) - 1n, (1n << 256n) - 1n, (1n << 256n) - 1n],
+      ];
+
+      let maxError1 = 0n, maxError2 = 0n, maxError3 = 0n;
+      let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0;
+
+      for (const [a, b, d] of cases) {
+        const expected = (a * b) / d;
+
+        const r1 = await deFiMath.mulDivMG(a, b, d);
+        avgGas1 += parseInt(r1.gasUsed);
+        const e1 = BigInt(r1.z.toString()) - expected;
+        if ((e1 < 0n ? -e1 : e1) > maxError1) maxError1 = e1 < 0n ? -e1 : e1;
+
+        const r2 = await prbMath.mulDivMG(a, b, d);
+        avgGas2 += parseInt(r2.gasUsed);
+        const e2 = BigInt(r2.z.toString()) - expected;
+        if ((e2 < 0n ? -e2 : e2) > maxError2) maxError2 = e2 < 0n ? -e2 : e2;
+
+        const r3 = await solady.mulDivMG(a, b, d);
+        avgGas3 += parseInt(r3.gasUsed);
+        const e3 = BigInt(r3.z.toString()) - expected;
+        if ((e3 < 0n ? -e3 : e3) > maxError3) maxError3 = e3 < 0n ? -e3 : e3;
+      }
+
+      const n = cases.length;
+      console.log("Metric        DeFiMath  PRBMath   Solady");
+      console.log("Max abs error  ", maxError1.toString().padStart(8), maxError2.toString().padStart(8), maxError3.toString().padStart(8));
+      console.log("Avg gas        ", (avgGas1 / n).toFixed(0).padStart(8), (avgGas2 / n).toFixed(0).padStart(8), (avgGas3 / n).toFixed(0).padStart(8));
+    });
+
     it("cbrt", async function () {
       const { deFiMath, solady } = await loadFixture(deployCompare);
 

@@ -2,6 +2,7 @@
 pragma solidity ^0.8.34;
 
 import { SD59x18, sd, exp, ln, log2, log10, sqrt, pow } from "./lib/SD59x18.sol";
+import { mulDiv } from "./lib/Common.sol";
 
 contract AdapterPRBMath {
 
@@ -80,8 +81,20 @@ contract AdapterPRBMath {
         startGas = gasleft();
         result = sqrt(sdX);
         endGas = gasleft();
-        
+
         gasUsed = startGas - endGas;
         return (uint256(result.unwrap()), gasUsed);
+    }
+
+    function mulDivMG(uint256 a, uint256 b, uint256 d) external view returns (uint256 z, uint256 gasUsed) {
+        uint256 startGas;
+        uint256 endGas;
+
+        startGas = gasleft();
+        // PRBMath's free-function mulDiv (Common.sol) — 512-bit precision via Remco Bloemen's algorithm
+        z = mulDiv(a, b, d);
+        endGas = gasleft();
+
+        return (z, startGas - endGas);
     }
 }

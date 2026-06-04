@@ -89,4 +89,16 @@ contract AdapterSolady {
         return (y, startGas - endGas);
     }
 
+    function mulDivMG(uint256 a, uint256 b, uint256 d) external view returns (uint256 z, uint256 gasUsed) {
+        uint256 startGas;
+        uint256 endGas;
+
+        startGas = gasleft();
+        // fullMulDiv is Solady's 512-bit-precision a·b/d — apples-to-apples with DeFiMath.mulDiv
+        z = FixedPointMathLib.fullMulDiv(a, b, d);
+        endGas = gasleft();
+
+        return (z, startGas - endGas);
+    }
+
 }
