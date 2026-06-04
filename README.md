@@ -70,7 +70,7 @@ Avg gas            2927      13404   20831      36243   89728
 | `expm1` †    |     9.9e-12 | **1.2e-12** | **1.2e-12** | **1.2e-12** |        — |
 | `log1p` †    | **7.0e-13** |     2.3e-11 |     5.1e-12 |     3.6e-12 |        — |
 
-† Competitors don't ship `expm1` / `log1p` natively; their numbers reflect the naive `exp(x) − 1` and `ln(1 + x)` formulas. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
+† Competitors don't ship `expm1` / `log1p` natively; their numbers reflect the naive `exp(x) − 1` and `ln(1 + x)` formulas. The `stdNormCDF` and `erf` rows are **absolute error** (both functions are bounded in [0, 1] and [−1, 1] respectively, so relative error is ill-defined near zero); all other rows are relative error. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
 
 ## Results — European options (Black-Scholes + Greeks)
 
