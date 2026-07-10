@@ -42,17 +42,17 @@ Avg gas            2729      13360   20623      35963   88969
 
 | Function     |    DeFiMath | PRBMath | ABDKQuad |  Solady | SolStat |
 | :----------- | ----------: | ------: | -------: | ------: | ------: |
-| `exp`        |     **333** |   2,820 |    5,840 |     372 |       — |
+| `exp`        |     **331** |   2,820 |    5,840 |     372 |       — |
 | `ln`         |     **375** |   6,901 |   12,695 |     518 |       — |
 | `log2`       |     **391** |   6,828 |   12,271 |       — |       — |
 | `log10`      |     **391** |   8,626 |        — |       — |       — |
-| `pow`        |     **750** |   9,792 |        — |     976 |       — |
-| `sqrt`       |     **245** |     959 |      808 |     341 |       — |
-| `cbrt`       |     **368** |       — |        — |     550 |       — |
+| `pow`        |     **788** |   9,792 |        — |     976 |       — |
+| `sqrt`       |     **218** |     959 |      808 |     341 |       — |
+| `cbrt`       |     **346** |       — |        — |     550 |       — |
 | `stdNormCDF` |     **660** |       — |        — |       — |   2,794 |
 | `erf`        |     **685** |       — |        — |       — |   1,732 |
-| `expm1` †    |         439 |   2,735 |    5,851 | **372** |       — |
-| `log1p` †    |     **500** |   6,842 |   13,228 |     518 |       — |
+| `expm1` †    |         418 |   2,735 |    5,851 | **372** |       — |
+| `log1p` †    |     **482** |   6,842 |   13,228 |     518 |       — |
 
 ### Max relative error (%)
 
@@ -81,9 +81,9 @@ Avg gas            2729      13360   20623      35963   88969
 | `callOptionPrice` | **2,729** |    13,360 | 20,623 |    35,963 | 88,969 |
 | `putOptionPrice`  | **2,739** |    13,363 | 20,791 |    36,140 | 88,301 |
 | `delta`           | **1,724** |     8,621 |      — |    24,960 |      — |
-| `gamma`           | **1,499** |         — |      — |         — |      — |
-| `theta`           | **3,293** |         — |      — |         — |      — |
-| `vega`            | **1,439** |     7,490 |      — |         — |      — |
+| `gamma`           | **1,496** |         — |      — |         — |      — |
+| `theta`           | **3,290** |         — |      — |         — |      — |
+| `vega`            | **1,436** |     7,490 |      — |         — |      — |
 
 ### Max absolute error (option price at $1,000 spot, unit Greeks)
 
@@ -106,10 +106,10 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 | :---------------- | --------: | -----: |
 | `binaryCallPrice` | **2,018** | 16,218 |
 | `binaryPutPrice`  | **2,023** | 16,221 |
-| `binaryDelta`     | **1,825** |      — |
-| `binaryGamma`     | **1,967** |      — |
-| `binaryTheta`     | **3,353** |      — |
-| `binaryVega`      | **1,913** |      — |
+| `binaryDelta`     | **1,822** |      — |
+| `binaryGamma`     | **1,964** |      — |
+| `binaryTheta`     | **3,350** |      — |
+| `binaryVega`      | **1,910** |      — |
 
 ### Max absolute error (unit payout)
 
@@ -133,10 +133,10 @@ We found no other on-chain interest-rate libraries to benchmark against, so this
 | `compoundInterest`     |     467 |           2.8e-12 |
 | `presentValue`         |     519 |           2.8e-12 |
 | `logReturn`            |     591 |           7.1e-14 |
-| `continuousToDiscrete` |     509 |           2.4e-12 |
-| `discreteToContinuous` |     590 |           5.1e-14 |
+| `continuousToDiscrete` |     492 |           2.4e-12 |
+| `discreteToContinuous` |     574 |           5.1e-14 |
 | `yieldToMaturity`      |     736 |           2.7e-12 |
-| `internalRateOfReturn` |  13,476 |           3.7e-13 |
+| `internalRateOfReturn` |  13,444 |           3.7e-13 |
 
 `internalRateOfReturn` gas scales with cashflow count; the figure above averages over scenarios of 2–5 cashflows. Grids and parameters match [`test/Rates.test.mjs`](test/Rates.test.mjs); reproduce with `npx hardhat test test/Rates.test.mjs`. Full module reference: [DeFiMath interest rates and yield math documentation](https://defimath.com/docs/rates/).
 
@@ -146,12 +146,12 @@ We found no other on-chain statistics libraries to benchmark against, so this se
 
 | Function                 | Avg gas | Max rel error (%) |
 | :------------------------ | ------: | ----------------: |
-| `geometricMean`           |     330 |           1.2e-14 |
+| `geometricMean`           |     305 |           1.2e-14 |
 | `mean`                    |   6,980 |           1.7e-14 |
-| `stdDev`                  |  15,298 |           4.2e-14 |
+| `stdDev`                  |  15,273 |           4.2e-14 |
 | `weightedAverage`         |  15,687 |           2.8e-14 |
-| `historicalVolatility`    |  26,135 |           1.6e-12 |
-| `sharpeRatio`             |  26,273 |           2.2e-12 |
+| `historicalVolatility`    |  26,082 |           1.6e-12 |
+| `sharpeRatio`             |  26,220 |           2.2e-12 |
 | `maxDrawdown`             |  15,191 |           9.9e-14 |
 | `valueAtRisk`             |  36,752 |           1.9e-12 |
 | `conditionalValueAtRisk`  |  32,917 |           2.5e-12 |
