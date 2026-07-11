@@ -32,7 +32,7 @@ Each test prints a table like:
 ```
 Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex
 Max abs error   5.6e-12    6.8e-13  1.7e-1     3.8e+1
-Avg gas            2729      13360   20623      35963   88969
+Avg gas            2723      13360   20623      35963   88969
   ✔ call
 ```
 
@@ -47,8 +47,8 @@ Avg gas            2729      13360   20623      35963   88969
 | `log2`       |     **391** |   6,828 |   12,271 |       — |       — |
 | `log10`      |     **391** |   8,626 |        — |       — |       — |
 | `pow`        |     **788** |   9,792 |        — |     976 |       — |
-| `sqrt`       |     **218** |     959 |      808 |     341 |       — |
-| `cbrt`       |     **346** |       — |        — |     550 |       — |
+| `sqrt`       |     **212** |     959 |      808 |     341 |       — |
+| `cbrt`       |     **340** |       — |        — |     550 |       — |
 | `stdNormCDF` |     **660** |       — |        — |       — |   2,794 |
 | `erf`        |     **685** |       — |        — |       — |   1,732 |
 | `expm1` †    |         418 |   2,735 |    5,851 | **372** |       — |
@@ -78,12 +78,12 @@ Avg gas            2729      13360   20623      35963   88969
 
 | Function          | DeFiMath  | Derivexyz | Premia | Party1983 |  Dopex |
 | :---------------- | --------: | --------: | -----: | --------: | -----: |
-| `callOptionPrice` | **2,729** |    13,360 | 20,623 |    35,963 | 88,969 |
-| `putOptionPrice`  | **2,739** |    13,363 | 20,791 |    36,140 | 88,301 |
-| `delta`           | **1,724** |     8,621 |      — |    24,960 |      — |
-| `gamma`           | **1,496** |         — |      — |         — |      — |
-| `theta`           | **3,290** |         — |      — |         — |      — |
-| `vega`            | **1,436** |     7,490 |      — |         — |      — |
+| `callOptionPrice` | **2,723** |    13,360 | 20,623 |    35,963 | 88,969 |
+| `putOptionPrice`  | **2,733** |    13,363 | 20,791 |    36,140 | 88,301 |
+| `delta`           | **1,718** |     8,621 |      — |    24,960 |      — |
+| `gamma`           | **1,490** |         — |      — |         — |      — |
+| `theta`           | **3,284** |         — |      — |         — |      — |
+| `vega`            | **1,430** |     7,490 |      — |         — |      — |
 
 ### Max absolute error (option price at $1,000 spot, unit Greeks)
 
@@ -104,12 +104,12 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 
 | Function          | DeFiMath  | Haptic |
 | :---------------- | --------: | -----: |
-| `binaryCallPrice` | **2,018** | 16,218 |
-| `binaryPutPrice`  | **2,023** | 16,221 |
-| `binaryDelta`     | **1,822** |      — |
-| `binaryGamma`     | **1,964** |      — |
-| `binaryTheta`     | **3,350** |      — |
-| `binaryVega`      | **1,910** |      — |
+| `binaryCallPrice` | **2,012** | 16,218 |
+| `binaryPutPrice`  | **2,017** | 16,221 |
+| `binaryDelta`     | **1,816** |      — |
+| `binaryGamma`     | **1,958** |      — |
+| `binaryTheta`     | **3,344** |      — |
+| `binaryVega`      | **1,904** |      — |
 
 ### Max absolute error (unit payout)
 
@@ -146,12 +146,12 @@ We found no other on-chain statistics libraries to benchmark against, so this se
 
 | Function                 | Avg gas | Max rel error (%) |
 | :------------------------ | ------: | ----------------: |
-| `geometricMean`           |     305 |           1.2e-14 |
+| `geometricMean`           |     299 |           1.2e-14 |
 | `mean`                    |   6,980 |           1.7e-14 |
-| `stdDev`                  |  15,273 |           4.2e-14 |
+| `stdDev`                  |  15,267 |           4.2e-14 |
 | `weightedAverage`         |  15,687 |           2.8e-14 |
-| `historicalVolatility`    |  26,082 |           1.6e-12 |
-| `sharpeRatio`             |  26,220 |           2.2e-12 |
+| `historicalVolatility`    |  26,070 |           1.6e-12 |
+| `sharpeRatio`             |  26,208 |           2.2e-12 |
 | `maxDrawdown`             |  15,191 |           9.9e-14 |
 | `valueAtRisk`             |  36,752 |           1.9e-12 |
 | `conditionalValueAtRisk`  |  32,917 |           2.5e-12 |
