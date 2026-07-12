@@ -47,7 +47,7 @@ Avg gas            2723      13360   20623      35963   88969
 | `log2`       |     **391** |   6,828 |   12,271 |       — |       — |
 | `log10`      |     **391** |   8,626 |        — |       — |       — |
 | `pow`        |     **788** |   9,792 |        — |     976 |       — |
-| `sqrt`       |     **212** |     959 |      808 |     341 |       — |
+| `sqrt`       |     **197** |     959 |      808 |     341 |       — |
 | `cbrt`       |     **340** |       — |        — |     550 |       — |
 | `stdNormCDF` |     **660** |       — |        — |       — |   2,794 |
 | `erf`        |     **685** |       — |        — |       — |   1,732 |
@@ -146,12 +146,12 @@ We found no other on-chain statistics libraries to benchmark against, so this se
 
 | Function                 | Avg gas | Max rel error (%) |
 | :------------------------ | ------: | ----------------: |
-| `geometricMean`           |     299 |           1.2e-14 |
+| `geometricMean`           |     284 |           1.2e-14 |
 | `mean`                    |   6,980 |           1.7e-14 |
-| `stdDev`                  |  15,267 |           4.2e-14 |
+| `stdDev`                  |  15,252 |           4.2e-14 |
 | `weightedAverage`         |  15,687 |           2.8e-14 |
-| `historicalVolatility`    |  26,070 |           1.6e-12 |
-| `sharpeRatio`             |  26,208 |           2.2e-12 |
+| `historicalVolatility`    |  26,040 |           1.6e-12 |
+| `sharpeRatio`             |  26,178 |           2.2e-12 |
 | `maxDrawdown`             |  15,191 |           9.9e-14 |
 | `valueAtRisk`             |  36,752 |           1.9e-12 |
 | `conditionalValueAtRisk`  |  32,917 |           2.5e-12 |
