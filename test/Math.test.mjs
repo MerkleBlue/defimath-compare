@@ -52,13 +52,13 @@ describe("DeFiMath", function () {
         avgGas4 += parseInt(result4.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
-        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "     " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
@@ -89,13 +89,13 @@ describe("DeFiMath", function () {
         avgGas4 += parseInt(result4.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
-        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "    " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
@@ -122,12 +122,12 @@ describe("DeFiMath", function () {
         avgGas3 += parseInt(result3.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
-        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "    " + (avgGas3 / count).toFixed(0));
     });
 
@@ -150,11 +150,11 @@ describe("DeFiMath", function () {
         avgGas2 += parseInt(result2.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0));
     });
 
@@ -182,13 +182,13 @@ describe("DeFiMath", function () {
           avgGas4 += parseInt(result4.gasUsed);
 
           count++;
-          maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-          maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
-          maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+          maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+          maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+          maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
         }
       }
       console.log("Metric            DeFiMath   PRBMath    Solady");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "    " + (avgGas2 / count).toFixed(0), "     " + (avgGas4 / count).toFixed(0));
     });
 
@@ -291,11 +291,11 @@ describe("DeFiMath", function () {
         avgGas2 += parseInt(result2.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
       }
       console.log("Metric            DeFiMath    Solady");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "      " + (avgGas2 / count).toFixed(0));
     });
 
@@ -318,11 +318,11 @@ describe("DeFiMath", function () {
         avgGas4 += parseInt(result4.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
       }
       console.log("Metric            DeFiMath  SolStat");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "    " + (avgGas4 / count).toFixed(0));
     });
 
@@ -345,11 +345,11 @@ describe("DeFiMath", function () {
         avgGas4 += parseInt(result4.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
       }
       console.log("Metric            DeFiMath  SolStat");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "    " + (avgGas4 / count).toFixed(0));
     });
 
@@ -389,13 +389,13 @@ describe("DeFiMath", function () {
         avgGas4 += parseInt(r4.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
-        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error (%) ", maxError1.toExponential(1) + "  ", maxError2.toExponential(1) + "  ", maxError3.toExponential(1) + "  ", maxError4.toExponential(1));
+      console.log("Max rel error     ", maxError1.toExponential(1) + "  ", maxError2.toExponential(1) + "  ", maxError3.toExponential(1) + "  ", maxError4.toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "     " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
@@ -436,13 +436,13 @@ describe("DeFiMath", function () {
         avgGas4 += parseInt(r4.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
-        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
+        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
+        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
+        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error (%) ", maxError1.toExponential(1) + "  ", maxError2.toExponential(1) + "  ", maxError3.toExponential(1) + "  ", maxError4.toExponential(1));
+      console.log("Max rel error     ", maxError1.toExponential(1) + "  ", maxError2.toExponential(1) + "  ", maxError3.toExponential(1) + "  ", maxError4.toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "    " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
@@ -452,7 +452,7 @@ describe("DeFiMath", function () {
 
       const probes = [1e-3, 1e-5, 1e-7, 1e-9, 1e-11, 1e-13];
 
-      console.log("\n--- expm1: rel error (%) per x ---");
+      console.log("\n--- expm1: rel error per x ---");
       console.log("x".padEnd(10), "DeFiMath".padStart(11), "PRBMath".padStart(11), "ABDK".padStart(11), "Solady".padStart(11));
       for (const x of probes) {
         const expected = Math.expm1(x);
@@ -469,11 +469,11 @@ describe("DeFiMath", function () {
         const r4 = await solady.expMG(tokens(x));
         const y4 = Number(BigInt(r4.y.toString()) - ONE) / 1e18;
 
-        const e = (y) => (Math.abs((y - expected) / expected) * 100).toExponential(1);
+        const e = (y) => (Math.abs((y - expected) / expected)).toExponential(1);
         console.log(x.toExponential(0).padEnd(10), e(y1).padStart(11), e(y2).padStart(11), e(y3).padStart(11), e(y4).padStart(11));
       }
 
-      console.log("\n--- log1p: rel error (%) per x ---");
+      console.log("\n--- log1p: rel error per x ---");
       console.log("x".padEnd(10), "DeFiMath".padStart(11), "PRBMath".padStart(11), "ABDK".padStart(11), "Solady".padStart(11));
       for (const x of probes) {
         const expected = Math.log1p(x);
@@ -494,7 +494,7 @@ describe("DeFiMath", function () {
         const r4 = await solady.lnMG(onePlusX);
         const y4 = Number(BigInt(r4.y.toString())) / 1e18;
 
-        const e = (y) => (Math.abs((y - expected) / expected) * 100).toExponential(1);
+        const e = (y) => (Math.abs((y - expected) / expected)).toExponential(1);
         console.log(x.toExponential(0).padEnd(10), e(y1).padStart(11), e(y2).padStart(11), e(y3).padStart(11), e(y4).padStart(11));
       }
     });

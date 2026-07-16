@@ -51,12 +51,12 @@ describe("DeFiMathRates", function () {
             const y = Number(BigInt(res.amount.toString())) / 1e18;
             avgGas += parseInt(res.gasUsed);
             count++;
-            maxError = Math.max(maxError, relErr(y, expected) * 100);
+            maxError = Math.max(maxError, relErr(y, expected));
           }
         }
       }
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     });
 
@@ -75,12 +75,12 @@ describe("DeFiMathRates", function () {
             const y = Number(BigInt(res.amount.toString())) / 1e18;
             avgGas += parseInt(res.gasUsed);
             count++;
-            maxError = Math.max(maxError, relErr(y, expected) * 100);
+            maxError = Math.max(maxError, relErr(y, expected));
           }
         }
       }
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     });
 
@@ -98,11 +98,11 @@ describe("DeFiMathRates", function () {
           const y = Number(BigInt(res.y.toString())) / 1e18;
           avgGas += parseInt(res.gasUsed);
           count++;
-          maxError = Math.max(maxError, relErr(y, expected) * 100);
+          maxError = Math.max(maxError, relErr(y, expected));
         }
       }
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     });
 
@@ -117,10 +117,10 @@ describe("DeFiMathRates", function () {
         const y = Number(BigInt(res.y.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     });
 
@@ -135,10 +135,10 @@ describe("DeFiMathRates", function () {
         const y = Number(BigInt(res.y.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     });
 
@@ -158,12 +158,12 @@ describe("DeFiMathRates", function () {
             const y = Number(BigInt(res.y.toString())) / 1e18;
             avgGas += parseInt(res.gasUsed);
             count++;
-            maxError = Math.max(maxError, relErr(y, expected) * 100);
+            maxError = Math.max(maxError, relErr(y, expected));
           }
         }
       }
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     });
 
@@ -185,10 +185,10 @@ describe("DeFiMathRates", function () {
         const y = Number(BigInt(res.y.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     });
   });

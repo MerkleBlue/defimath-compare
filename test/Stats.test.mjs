@@ -95,7 +95,7 @@ describe("DeFiMathStats", function () {
 
     function report(maxError, avgGas, count) {
       console.log("Metric            DeFiMath");
-      console.log("Max rel error (%) ", maxError.toExponential(1));
+      console.log("Max rel error     ", maxError.toExponential(1));
       console.log("Avg gas               ", (avgGas / count).toFixed(0));
     }
 
@@ -110,7 +110,7 @@ describe("DeFiMathStats", function () {
         const y = Number(BigInt(res.result.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       report(maxError, avgGas, count);
     });
@@ -130,7 +130,7 @@ describe("DeFiMathStats", function () {
         const y = Number(BigInt(res.result.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       report(maxError, avgGas, count);
     });
@@ -150,7 +150,7 @@ describe("DeFiMathStats", function () {
         const y = Number(BigInt(res.result.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       report(maxError, avgGas, count);
     });
@@ -170,7 +170,7 @@ describe("DeFiMathStats", function () {
         const y = Number(BigInt(res.result.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       report(maxError, avgGas, count);
     });
@@ -187,7 +187,7 @@ describe("DeFiMathStats", function () {
           const y = Number(BigInt(res.result.toString())) / 1e18;
           avgGas += parseInt(res.gasUsed);
           count++;
-          maxError = Math.max(maxError, relErr(y, expected) * 100);
+          maxError = Math.max(maxError, relErr(y, expected));
         }
       }
       report(maxError, avgGas, count);
@@ -206,7 +206,7 @@ describe("DeFiMathStats", function () {
           const y = Number(BigInt(res.result.toString())) / 1e18;
           avgGas += parseInt(res.gasUsed);
           count++;
-          maxError = Math.max(maxError, relErr(y, expected) * 100);
+          maxError = Math.max(maxError, relErr(y, expected));
         }
       }
       report(maxError, avgGas, count);
@@ -228,7 +228,7 @@ describe("DeFiMathStats", function () {
         const y = Number(BigInt(res.result.toString())) / 1e18;
         avgGas += parseInt(res.gasUsed);
         count++;
-        maxError = Math.max(maxError, relErr(y, expected) * 100);
+        maxError = Math.max(maxError, relErr(y, expected));
       }
       report(maxError, avgGas, count);
     });
@@ -245,7 +245,7 @@ describe("DeFiMathStats", function () {
           const y = Number(BigInt(res.result.toString())) / 1e18;
           avgGas += parseInt(res.gasUsed);
           count++;
-          maxError = Math.max(maxError, relErr(y, expected) * 100);
+          maxError = Math.max(maxError, relErr(y, expected));
         }
       }
       report(maxError, avgGas, count);
@@ -263,7 +263,7 @@ describe("DeFiMathStats", function () {
           const y = Number(BigInt(res.result.toString())) / 1e18;
           avgGas += parseInt(res.gasUsed);
           count++;
-          maxError = Math.max(maxError, relErr(y, expected) * 100);
+          maxError = Math.max(maxError, relErr(y, expected));
         }
       }
       report(maxError, avgGas, count);
