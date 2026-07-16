@@ -51,26 +51,24 @@ Avg gas            2708      13360   20623      35963   88969
 | `cbrt`       |     **340** |       — |        — |     550 |       — |
 | `stdNormCDF` |     **660** |       — |        — |       — |   2,794 |
 | `erf`        |     **685** |       — |        — |       — |   1,732 |
-| `expm1` †    |         418 |   2,735 |    5,851 | **372** |       — |
-| `log1p` †    |     **482** |   6,842 |   13,228 |     518 |       — |
 
-### Max relative error (%)
+### Max relative error
 
 | Function     |    DeFiMath |     PRBMath |    ABDKQuad |      Solady |  SolStat |
 | :----------- | ----------: | ----------: | ----------: | ----------: | -------: |
-| `exp`        |     5.1e-12 | **1.9e-12** | **1.9e-12** | **1.9e-12** |        — |
-| `ln`         |     1.5e-12 | **1.3e-12** |     1.6e-12 |     1.6e-12 |        — |
-| `log2`       |     1.5e-12 | **1.3e-12** |     1.6e-12 |           — |        — |
-| `log10`      |     1.4e-12 | **1.3e-12** |           — |           — |        — |
-| `pow`        |     5.2e-12 | **6.1e-14** |           — | **6.1e-14** |        — |
-| `sqrt`       | **2.8e-14** | **2.8e-14** | **2.8e-14** | **2.8e-14** |        — |
-| `cbrt`       | **2.2e-14** |           — |           — | **2.2e-14** |        — |
-| `stdNormCDF` | **4.7e-13** |           — |           — |           — |   3.2e-6 |
-| `erf`        | **7.4e-13** |           — |           — |           — |   5.7e-6 |
-| `expm1` †    |     9.9e-12 | **1.2e-12** | **1.2e-12** | **1.2e-12** |        — |
-| `log1p` †    | **7.0e-13** |     2.3e-11 |     5.1e-12 |     3.6e-12 |        — |
+| `exp`        |     5.1e-14 | **1.9e-14** | **1.9e-14** | **1.9e-14** |        — |
+| `ln`         | **2.8e-16** | **2.8e-16** | **2.8e-16** | **2.8e-16** |        — |
+| `log2`       | **3.6e-16** | **3.6e-16** | **3.6e-16** |           — |        — |
+| `log10`      | **2.2e-16** | **2.2e-16** |           — |           — |        — |
+| `pow`        |     5.2e-14 | **6.1e-16** |           — | **6.1e-16** |        — |
+| `sqrt`       | **4.8e-19** | **4.8e-19** | **4.8e-19** | **4.8e-19** |        — |
+| `cbrt`       | **2.2e-16** |           — |           — | **2.2e-16** |        — |
+| `stdNormCDF` | **4.7e-15** |           — |           — |           — |   3.2e-8 |
+| `erf`        | **7.4e-15** |           — |           — |           — |   5.7e-8 |
 
-† Competitors don't ship `expm1` / `log1p` natively; their numbers reflect the naive `exp(x) − 1` and `ln(1 + x)` formulas. The `stdNormCDF` and `erf` rows are **absolute error** (both functions are bounded in [0, 1] and [−1, 1] respectively, so relative error is ill-defined near zero); all other rows are relative error. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
+All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measured on x ∈ [0.5, 10] — away from erf's zero at x = 0, where relative error would be ill-defined (both functions are bounded, in [0, 1] and [−1, 1]). Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
+
+`expm1` and `log1p` are not benchmarked here: their domain of interest is near the root (`|result| < 1`), where the correct error metric is absolute, not the relative error this table reports. Their gas and precision are documented in [defimath](https://github.com/MerkleBlue/defimath) and at [defimath.com/docs/math](https://defimath.com/docs/math/).
 
 ## Results — European options (Black-Scholes + Greeks)
 
@@ -128,15 +126,15 @@ Haptic is the only on-chain binary-options implementation we found. It doesn't s
 
 We found no other on-chain interest-rate libraries to benchmark against, so this section reports DeFiMath measurements only.
 
-| Function               | Avg gas | Max rel error (%) |
-| :--------------------- | ------: | ----------------: |
-| `compoundInterest`     |     467 |           2.8e-12 |
-| `presentValue`         |     519 |           2.8e-12 |
-| `logReturn`            |     591 |           7.1e-14 |
-| `continuousToDiscrete` |     492 |           2.4e-12 |
-| `discreteToContinuous` |     574 |           5.1e-14 |
-| `yieldToMaturity`      |     736 |           2.7e-12 |
-| `internalRateOfReturn` |  13,444 |           3.7e-13 |
+| Function               | Avg gas | Max rel error |
+| :--------------------- | ------: | ------------: |
+| `compoundInterest`     |     467 |       2.8e-14 |
+| `presentValue`         |     519 |       2.8e-14 |
+| `logReturn`            |     591 |       7.1e-16 |
+| `continuousToDiscrete` |     492 |       2.4e-14 |
+| `discreteToContinuous` |     574 |       5.1e-16 |
+| `yieldToMaturity`      |     736 |       2.7e-14 |
+| `internalRateOfReturn` |  13,444 |       3.7e-15 |
 
 `internalRateOfReturn` gas scales with cashflow count; the figure above averages over scenarios of 2–5 cashflows. Grids and parameters match [`test/Rates.test.mjs`](test/Rates.test.mjs); reproduce with `npx hardhat test test/Rates.test.mjs`. Full module reference: [DeFiMath interest rates and yield math documentation](https://defimath.com/docs/rates/).
 
@@ -144,17 +142,17 @@ We found no other on-chain interest-rate libraries to benchmark against, so this
 
 We found no other on-chain statistics libraries to benchmark against, so this section reports DeFiMath measurements only. Array-input functions are measured on 30-element inputs; their gas scales with input length.
 
-| Function                 | Avg gas | Max rel error (%) |
-| :------------------------ | ------: | ----------------: |
-| `geometricMean`           |     284 |           1.2e-14 |
-| `mean`                    |   6,980 |           1.7e-14 |
-| `stdDev`                  |  15,252 |           4.2e-14 |
-| `weightedAverage`         |  15,687 |           2.8e-14 |
-| `historicalVolatility`    |  26,040 |           1.6e-12 |
-| `sharpeRatio`             |  26,178 |           2.2e-12 |
-| `maxDrawdown`             |  15,191 |           9.9e-14 |
-| `valueAtRisk`             |  36,752 |           1.9e-12 |
-| `conditionalValueAtRisk`  |  32,917 |           2.5e-12 |
+| Function                 | Avg gas | Max rel error |
+| :------------------------ | ------: | ------------: |
+| `geometricMean`           |     284 |       1.2e-16 |
+| `mean`                    |   6,980 |       1.7e-16 |
+| `stdDev`                  |  15,252 |       4.2e-16 |
+| `weightedAverage`         |  15,687 |       2.8e-16 |
+| `historicalVolatility`    |  26,040 |       1.6e-14 |
+| `sharpeRatio`             |  26,178 |       2.2e-14 |
+| `maxDrawdown`             |  15,191 |       9.9e-16 |
+| `valueAtRisk`             |  36,752 |       1.9e-14 |
+| `conditionalValueAtRisk`  |  32,917 |       2.5e-14 |
 
 `valueAtRisk` precision is measured against `simple-statistics`' `quantile`; all others against direct JavaScript reference implementations. Grids and parameters match [`test/Stats.test.mjs`](test/Stats.test.mjs); reproduce with `npx hardhat test test/Stats.test.mjs`. Full module reference: [DeFiMath statistics and risk metrics documentation](https://defimath.com/docs/statistics/).
 
