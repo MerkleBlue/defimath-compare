@@ -1,6 +1,22 @@
 
 import { assert, expect } from "chai";
 import hre from "hardhat";
+import Decimal from "decimal.js";
+
+// ~40 significant digits (~133 bits) — far beyond FP18 (~60 bits), so the reference
+// is exact relative to what the contracts produce. Lets us measure each library's TRUE
+// error instead of flooring it at f64 machine epsilon (~1e-14 %) like Math.exp/sqrt do.
+Decimal.set({ precision: 40 });
+
+// exact √(x·1e18) in wei — same reference as defimath's sqrt tests
+export function sqrtExactWei(xWei) {
+  return new Decimal(xWei.toString()).times("1e18").sqrt();
+}
+
+// relative error of a wei result vs a wei reference — same as defimath (not a percentage)
+export function relError(actualWei, expected) {
+  return new Decimal(actualWei.toString()).minus(expected).abs().div(expected);
+}
 
 export const SEC_IN_DAY = 24 * 60 * 60;
 export const SEC_IN_YEAR = 365 * 24 * 60 * 60;

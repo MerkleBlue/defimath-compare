@@ -2,7 +2,7 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import bs from "black-scholes";
 import erf from 'math-erf';
-import { tokens } from "./Common.test.mjs";
+import { tokens, sqrtExactWei, relError } from "./Common.test.mjs";
 
 describe("DeFiMath", function () {
   async function deployCompare() {
@@ -199,33 +199,30 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0;
 
-      for (let x = 1e-4; x <= 1e4; x += x / 4) {
-        const expected = Math.sqrt(x);
+      for (let x = 1; x < 1e12; x += x / 4) {
+        const xWei = tokens(x);
+        const expected = sqrtExactWei(xWei);
 
-        const result1 = await deFiMath.sqrtMG(tokens(x));
-        const y1 = result1.y.toString() / 1e18;
+        const result1 = await deFiMath.sqrtMG(xWei);
         avgGas1 += parseInt(result1.gasUsed);
+        maxError1 = Math.max(maxError1, Number(relError(result1.y, expected)));
 
-        const result2 = await prbMath.sqrtMG(tokens(x));
-        const y2 = result2.y.toString() / 1e18;
+        const result2 = await prbMath.sqrtMG(xWei);
         avgGas2 += parseInt(result2.gasUsed);
+        maxError2 = Math.max(maxError2, Number(relError(result2.y, expected)));
 
-        const result3 = await abdkMath.sqrtMG(tokens(x));
-        const y3 = result3.y.toString() / 1e18;
+        const result3 = await abdkMath.sqrtMG(xWei);
         avgGas3 += parseInt(result3.gasUsed);
+        maxError3 = Math.max(maxError3, Number(relError(result3.y, expected)));
 
-        const result4 = await solady.sqrtMG(tokens(x));
-        const y4 = result4.y.toString() / 1e18;
+        const result4 = await solady.sqrtMG(xWei);
         avgGas4 += parseInt(result4.gasUsed);
+        maxError4 = Math.max(maxError4, Number(relError(result4.y, expected)));
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected) * 100);
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected) * 100);
-        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected) * 100);
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected) * 100);
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error (%) ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "      " + (avgGas2 / count).toFixed(0), "      " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
