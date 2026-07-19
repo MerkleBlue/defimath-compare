@@ -67,10 +67,10 @@ contract AdapterSolady {
         uint256 endGas;
 
         startGas = gasleft();
-        // NOTE: converting x to 1e36 precision, and counting gas, 
-        // simulates fixed-point math in x around 1e18, but function is not
-        // actually fixed-point math
-        y = FixedPointMathLib.sqrt(x * 1e18);
+        // Solady's native fixed-point sqrt (mirrors cbrtWad below). Like DeFiMath's,
+        // it two-branches at type(uint256).max / 1e18 and accepts the full uint256
+        // domain without reverting — so this is a like-for-like comparison.
+        y = FixedPointMathLib.sqrtWad(x);
         endGas = gasleft();
         
         gasUsed = startGas - endGas;
