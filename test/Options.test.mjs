@@ -2,7 +2,7 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import bs from "black-scholes";
 import greeks from "greeks";
-import { SEC_IN_DAY, tokens } from "./Common.test.mjs";
+import { tokens, SEC_IN_DAY } from "./Common.test.mjs";
 
 // bs has a bug with time = 0, it returns NaN, so we are wrapping it
 function blackScholesWrapped(spot, strike, time, vol, rate, callOrPut) {

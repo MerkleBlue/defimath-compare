@@ -10,7 +10,8 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "npx hardhat test"
+    "test": "npx hardhat test",
+    "postinstall": "node scripts/link-local-defimath.mjs"
   },
   "dependencies": {
     "defimath-lib": "^3.5.0"
