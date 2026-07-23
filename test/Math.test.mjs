@@ -28,11 +28,13 @@ describe("DeFiMath", function () {
     it("exp", async function () {
       const { deFiMath, prbMath, abdkMath, solady } = await loadFixture(deployCompare);
 
-      let maxError1 = 0, maxError2 = 0, maxError3 = 0, maxError4 = 0;
+      let maxRel1 = 0, maxRel2 = 0, maxRel3 = 0, maxRel4 = 0;
+      let maxAbs1 = 0, maxAbs2 = 0, maxAbs3 = 0, maxAbs4 = 0;
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0;
 
       // Synced with defimath's perf test grid: 1000 samples, both branches balanced.
+      // Rel error tracked where |exp(x)| >= 1 (x >= 0), abs error where |exp(x)| < 1 (x < 0).
       for (let x = -10; x <= 10; x += 0.02) {
         const expected = Math.exp(x);
 
@@ -53,27 +55,35 @@ describe("DeFiMath", function () {
         avgGas4 += parseInt(result4.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
-        maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
-        maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
+        if (Math.abs(expected) >= 1) {
+          maxRel1 = Math.max(maxRel1, Math.abs((y1 - expected) / expected));
+          maxRel2 = Math.max(maxRel2, Math.abs((y2 - expected) / expected));
+          maxRel3 = Math.max(maxRel3, Math.abs((y3 - expected) / expected));
+          maxRel4 = Math.max(maxRel4, Math.abs((y4 - expected) / expected));
+        } else {
+          maxAbs1 = Math.max(maxAbs1, Math.abs(y1 - expected));
+          maxAbs2 = Math.max(maxAbs2, Math.abs(y2 - expected));
+          maxAbs3 = Math.max(maxAbs3, Math.abs(y3 - expected));
+          maxAbs4 = Math.max(maxAbs4, Math.abs(y4 - expected));
+        }
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxRel1).toExponential(1) + "  ", (maxRel2).toExponential(1) + "  ", (maxRel3).toExponential(1) + "  ", (maxRel4).toExponential(1));
+      console.log("Max abs error     ", (maxAbs1).toExponential(1) + "  ", (maxAbs2).toExponential(1) + "  ", (maxAbs3).toExponential(1) + "  ", (maxAbs4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "     " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
     it("ln", async function () {
       const { deFiMath, prbMath, abdkMath, solady } = await loadFixture(deployCompare);
 
-      let maxError1 = 0, maxError2 = 0, maxError3 = 0, maxError4 = 0;
+      let maxRel1 = 0, maxRel2 = 0, maxRel3 = 0, maxRel4 = 0;
+      let maxAbs1 = 0, maxAbs2 = 0, maxAbs3 = 0, maxAbs4 = 0;
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0;
 
       // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // both branches (x < 1 and x >= 1) balanced. Rel-error reporting is guarded
-      // to only count samples where |ln(x)| >= 1 — near the root at x = 1 the true
-      // ln → 0, so relative error blows up as an artifact of division by ~0.
+      // both branches balanced. Rel tracked where |ln(x)| >= 1, abs where |ln(x)| < 1
+      // (near the root at x = 1 where relative error would blow up).
       for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.log(x);
 
@@ -95,27 +105,33 @@ describe("DeFiMath", function () {
 
         count++;
         if (Math.abs(expected) >= 1) {
-          maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
-          maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
-          maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
-          maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
+          maxRel1 = Math.max(maxRel1, Math.abs((y1 - expected) / expected));
+          maxRel2 = Math.max(maxRel2, Math.abs((y2 - expected) / expected));
+          maxRel3 = Math.max(maxRel3, Math.abs((y3 - expected) / expected));
+          maxRel4 = Math.max(maxRel4, Math.abs((y4 - expected) / expected));
+        } else {
+          maxAbs1 = Math.max(maxAbs1, Math.abs(y1 - expected));
+          maxAbs2 = Math.max(maxAbs2, Math.abs(y2 - expected));
+          maxAbs3 = Math.max(maxAbs3, Math.abs(y3 - expected));
+          maxAbs4 = Math.max(maxAbs4, Math.abs(y4 - expected));
         }
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxRel1).toExponential(1) + "  ", (maxRel2).toExponential(1) + "  ", (maxRel3).toExponential(1) + "  ", (maxRel4).toExponential(1));
+      console.log("Max abs error     ", (maxAbs1).toExponential(1) + "  ", (maxAbs2).toExponential(1) + "  ", (maxAbs3).toExponential(1) + "  ", (maxAbs4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "    " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
     it("log2", async function () {
       const { deFiMath, prbMath, abdkMath } = await loadFixture(deployCompare);
 
-      let maxError1 = 0, maxError2 = 0, maxError3 = 0;
+      let maxRel1 = 0, maxRel2 = 0, maxRel3 = 0;
+      let maxAbs1 = 0, maxAbs2 = 0, maxAbs3 = 0;
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0;
       let count = 0;
 
       // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // both branches balanced. Rel-error guarded by |log2(x)| >= 1 to avoid the
-      // near-root artifact at x = 1.
+      // both branches balanced. Rel tracked where |log2(x)| >= 1, abs where < 1.
       for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.log2(x);
 
@@ -133,26 +149,31 @@ describe("DeFiMath", function () {
 
         count++;
         if (Math.abs(expected) >= 1) {
-          maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
-          maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
-          maxError3 = Math.max(maxError3, Math.abs((y3 - expected) / expected));
+          maxRel1 = Math.max(maxRel1, Math.abs((y1 - expected) / expected));
+          maxRel2 = Math.max(maxRel2, Math.abs((y2 - expected) / expected));
+          maxRel3 = Math.max(maxRel3, Math.abs((y3 - expected) / expected));
+        } else {
+          maxAbs1 = Math.max(maxAbs1, Math.abs(y1 - expected));
+          maxAbs2 = Math.max(maxAbs2, Math.abs(y2 - expected));
+          maxAbs3 = Math.max(maxAbs3, Math.abs(y3 - expected));
         }
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1));
+      console.log("Max rel error     ", (maxRel1).toExponential(1) + "  ", (maxRel2).toExponential(1) + "  ", (maxRel3).toExponential(1));
+      console.log("Max abs error     ", (maxAbs1).toExponential(1) + "  ", (maxAbs2).toExponential(1) + "  ", (maxAbs3).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "    " + (avgGas3 / count).toFixed(0));
     });
 
     it("log10", async function () {
       const { deFiMath, prbMath } = await loadFixture(deployCompare);
 
-      let maxError1 = 0, maxError2 = 0;
+      let maxRel1 = 0, maxRel2 = 0;
+      let maxAbs1 = 0, maxAbs2 = 0;
       let avgGas1 = 0, avgGas2 = 0;
       let count = 0;
 
       // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // both branches balanced. Rel-error guarded by |log10(x)| >= 1 to avoid the
-      // near-root artifact at x = 1.
+      // both branches balanced. Rel tracked where |log10(x)| >= 1, abs where < 1.
       for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.log10(x);
 
@@ -166,25 +187,30 @@ describe("DeFiMath", function () {
 
         count++;
         if (Math.abs(expected) >= 1) {
-          maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
-          maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+          maxRel1 = Math.max(maxRel1, Math.abs((y1 - expected) / expected));
+          maxRel2 = Math.max(maxRel2, Math.abs((y2 - expected) / expected));
+        } else {
+          maxAbs1 = Math.max(maxAbs1, Math.abs(y1 - expected));
+          maxAbs2 = Math.max(maxAbs2, Math.abs(y2 - expected));
         }
       }
-      console.log("Metric            DeFiMath   PRBMath  ABDKQuad");
-      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
+      console.log("Metric            DeFiMath   PRBMath");
+      console.log("Max rel error     ", (maxRel1).toExponential(1) + "  ", (maxRel2).toExponential(1));
+      console.log("Max abs error     ", (maxAbs1).toExponential(1) + "  ", (maxAbs2).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0));
     });
 
     it("pow", async function () {
       const { deFiMath, prbMath, solady } = await loadFixture(deployCompare);
 
-      let maxError1 = 0, maxError2 = 0, maxError4 = 0;
+      let maxRel1 = 0, maxRel2 = 0, maxRel4 = 0;
+      let maxAbs1 = 0, maxAbs2 = 0, maxAbs4 = 0;
       let avgGas1 = 0, avgGas2 = 0, avgGas4 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: 22 log-spaced x × 22 linear a = 484
-      // samples. x covers both ln branches (below 1 and above 1), a covers both exp signs.
-      // Rel-error guarded by |pow| >= 1 to avoid near-root artifact when x^a ≈ 1.
+      // Synced with defimath's perf test grid: 32 log-x × 32 linear a = 1024 samples.
+      // x covers both ln branches, a covers both exp signs. Rel tracked where
+      // |x^a| >= 1, abs where < 1.
       const xRatio = 256 ** (1 / 31);
       for (let x = 1 / 16; x <= 16; x *= xRatio) {
         for (let a = -3; a <= 3; a += 6 / 31) {
@@ -204,50 +230,62 @@ describe("DeFiMath", function () {
 
           count++;
           if (Math.abs(expected) >= 1) {
-            maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
-            maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
-            maxError4 = Math.max(maxError4, Math.abs((y4 - expected) / expected));
+            maxRel1 = Math.max(maxRel1, Math.abs((y1 - expected) / expected));
+            maxRel2 = Math.max(maxRel2, Math.abs((y2 - expected) / expected));
+            maxRel4 = Math.max(maxRel4, Math.abs((y4 - expected) / expected));
+          } else {
+            maxAbs1 = Math.max(maxAbs1, Math.abs(y1 - expected));
+            maxAbs2 = Math.max(maxAbs2, Math.abs(y2 - expected));
+            maxAbs4 = Math.max(maxAbs4, Math.abs(y4 - expected));
           }
         }
       }
       console.log("Metric            DeFiMath   PRBMath    Solady");
-      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxRel1).toExponential(1) + "  ", (maxRel2).toExponential(1) + "  ", (maxRel4).toExponential(1));
+      console.log("Max abs error     ", (maxAbs1).toExponential(1) + "  ", (maxAbs2).toExponential(1) + "  ", (maxAbs4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "    " + (avgGas2 / count).toFixed(0), "     " + (avgGas4 / count).toFixed(0));
     });
 
     it("sqrt", async function () {
       const { deFiMath, prbMath, abdkMath, solady } = await loadFixture(deployCompare);
 
-      let maxError1 = 0, maxError2 = 0, maxError3 = 0, maxError4 = 0;
+      let maxRel1 = 0, maxRel2 = 0, maxRel3 = 0, maxRel4 = 0;
+      let maxAbs1 = 0, maxAbs2 = 0, maxAbs3 = 0, maxAbs4 = 0;
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0;
 
       // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // covers both below-1 and above-1 real values.
+      // covers both below-1 and above-1 real values. Rel tracked where sqrt(x) >= 1
+      // (x >= 1), abs where < 1. Abs is in real units — dividing wei delta by 1e18.
       for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const xWei = tokens(x);
         const expected = sqrtExactWei(xWei);
 
         const result1 = await deFiMath.sqrtMG(xWei);
         avgGas1 += parseInt(result1.gasUsed);
-        maxError1 = Math.max(maxError1, Number(relError(result1.y, expected)));
-
         const result2 = await prbMath.sqrtMG(xWei);
         avgGas2 += parseInt(result2.gasUsed);
-        maxError2 = Math.max(maxError2, Number(relError(result2.y, expected)));
-
         const result3 = await abdkMath.sqrtMG(xWei);
         avgGas3 += parseInt(result3.gasUsed);
-        maxError3 = Math.max(maxError3, Number(relError(result3.y, expected)));
-
         const result4 = await solady.sqrtMG(xWei);
         avgGas4 += parseInt(result4.gasUsed);
-        maxError4 = Math.max(maxError4, Number(relError(result4.y, expected)));
 
+        if (x >= 1) {
+          maxRel1 = Math.max(maxRel1, Number(relError(result1.y, expected)));
+          maxRel2 = Math.max(maxRel2, Number(relError(result2.y, expected)));
+          maxRel3 = Math.max(maxRel3, Number(relError(result3.y, expected)));
+          maxRel4 = Math.max(maxRel4, Number(relError(result4.y, expected)));
+        } else {
+          maxAbs1 = Math.max(maxAbs1, Math.abs(Number(result1.y - BigInt(expected.floor().toString())) / 1e18));
+          maxAbs2 = Math.max(maxAbs2, Math.abs(Number(result2.y - BigInt(expected.floor().toString())) / 1e18));
+          maxAbs3 = Math.max(maxAbs3, Math.abs(Number(result3.y - BigInt(expected.floor().toString())) / 1e18));
+          maxAbs4 = Math.max(maxAbs4, Math.abs(Number(result4.y - BigInt(expected.floor().toString())) / 1e18));
+        }
         count++;
       }
       console.log("Metric            DeFiMath   PRBMath  ABDKQuad    Solady");
-      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1) + "  ", (maxError3).toExponential(1) + "  ", (maxError4).toExponential(1));
+      console.log("Max rel error     ", (maxRel1).toExponential(1) + "  ", (maxRel2).toExponential(1) + "  ", (maxRel3).toExponential(1) + "  ", (maxRel4).toExponential(1));
+      console.log("Max abs error     ", (maxAbs1).toExponential(1) + "  ", (maxAbs2).toExponential(1) + "  ", (maxAbs3).toExponential(1) + "  ", (maxAbs4).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "      " + (avgGas2 / count).toFixed(0), "      " + (avgGas3 / count).toFixed(0), "      " + (avgGas4 / count).toFixed(0));
     });
 
@@ -300,12 +338,14 @@ describe("DeFiMath", function () {
     it("cbrt", async function () {
       const { deFiMath, solady } = await loadFixture(deployCompare);
 
-      let maxError1 = 0, maxError2 = 0;
+      let maxRel1 = 0, maxRel2 = 0;
+      let maxAbs1 = 0, maxAbs2 = 0;
       let avgGas1 = 0, avgGas2 = 0;
       let count = 0;
 
       // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // covers both below-1 and above-1 real values.
+      // covers both below-1 and above-1 real values. Rel tracked where cbrt(x) >= 1
+      // (x >= 1), abs where < 1.
       for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.cbrt(x);
 
@@ -318,11 +358,17 @@ describe("DeFiMath", function () {
         avgGas2 += parseInt(result2.gasUsed);
 
         count++;
-        maxError1 = Math.max(maxError1, Math.abs((y1 - expected) / expected));
-        maxError2 = Math.max(maxError2, Math.abs((y2 - expected) / expected));
+        if (x >= 1) {
+          maxRel1 = Math.max(maxRel1, Math.abs((y1 - expected) / expected));
+          maxRel2 = Math.max(maxRel2, Math.abs((y2 - expected) / expected));
+        } else {
+          maxAbs1 = Math.max(maxAbs1, Math.abs(y1 - expected));
+          maxAbs2 = Math.max(maxAbs2, Math.abs(y2 - expected));
+        }
       }
       console.log("Metric            DeFiMath    Solady");
-      console.log("Max rel error     ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
+      console.log("Max rel error     ", (maxRel1).toExponential(1) + "  ", (maxRel2).toExponential(1));
+      console.log("Max abs error     ", (maxAbs1).toExponential(1) + "  ", (maxAbs2).toExponential(1));
       console.log("Avg gas               ", (avgGas1 / count).toFixed(0), "      " + (avgGas2 / count).toFixed(0));
     });
 
