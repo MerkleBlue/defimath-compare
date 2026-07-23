@@ -32,8 +32,8 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: 500 samples, both branches balanced.
-      for (let x = -10; x <= 10; x += 0.04) {
+      // Synced with defimath's perf test grid: 1000 samples, both branches balanced.
+      for (let x = -10; x <= 10; x += 0.02) {
         const expected = Math.exp(x);
 
         const result1 = await deFiMath.expMG(tokens(x));
@@ -70,11 +70,11 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 500 samples,
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
       // both branches (x < 1 and x >= 1) balanced. Rel-error reporting is guarded
       // to only count samples where |ln(x)| >= 1 — near the root at x = 1 the true
       // ln → 0, so relative error blows up as an artifact of division by ~0.
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 500)) {
+      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.log(x);
 
         const result1 = await deFiMath.lnMG(tokens(x));
@@ -113,10 +113,10 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 500 samples,
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
       // both branches balanced. Rel-error guarded by |log2(x)| >= 1 to avoid the
       // near-root artifact at x = 1.
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 500)) {
+      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.log2(x);
 
         const result1 = await deFiMath.log2MG(tokens(x));
@@ -150,10 +150,10 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 500 samples,
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
       // both branches balanced. Rel-error guarded by |log10(x)| >= 1 to avoid the
       // near-root artifact at x = 1.
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 500)) {
+      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.log10(x);
 
         const result1 = await deFiMath.log10MG(tokens(x));
@@ -185,9 +185,9 @@ describe("DeFiMath", function () {
       // Synced with defimath's perf test grid: 22 log-spaced x × 22 linear a = 484
       // samples. x covers both ln branches (below 1 and above 1), a covers both exp signs.
       // Rel-error guarded by |pow| >= 1 to avoid near-root artifact when x^a ≈ 1.
-      const xRatio = 256 ** (1 / 21);
+      const xRatio = 256 ** (1 / 31);
       for (let x = 1 / 16; x <= 16; x *= xRatio) {
-        for (let a = -3; a <= 3; a += 6 / 21) {
+        for (let a = -3; a <= 3; a += 6 / 31) {
           const expected = Math.pow(x, a);
 
           const result1 = await deFiMath.powMG(tokens(x), tokens(a));
@@ -222,9 +222,9 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 500 samples,
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
       // covers both below-1 and above-1 real values.
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 500)) {
+      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const xWei = tokens(x);
         const expected = sqrtExactWei(xWei);
 
@@ -304,9 +304,9 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 500 samples,
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
       // covers both below-1 and above-1 real values.
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 500)) {
+      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
         const expected = Math.cbrt(x);
 
         const result1 = await deFiMath.cbrtMG(tokens(x));
@@ -333,9 +333,9 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas4 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: symmetric around 0, 500 samples,
+      // Synced with defimath's perf test grid: symmetric around 0, 1000 samples,
       // both positive and negative branches balanced.
-      for (let x = -6; x <= 6; x += 0.024) {
+      for (let x = -6; x <= 6; x += 0.012) {
         const expected = bs.stdNormCDF(x);
 
         const result1 = await deFiMath.stdNormCDFMG(tokens(x));
@@ -362,9 +362,9 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas4 = 0;
       let count = 0;
 
-      // Synced with defimath's perf test grid: symmetric around 0, 500 samples,
+      // Synced with defimath's perf test grid: symmetric around 0, 1000 samples,
       // both positive and negative branches balanced.
-      for (let x = -6; x <= 6; x += 0.024) {
+      for (let x = -6; x <= 6; x += 0.012) {
         const expected = erf(x);
 
         const result1 = await deFiMath.erfMG(tokens(x));
