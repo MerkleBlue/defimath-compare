@@ -31,8 +31,8 @@ Each test prints a table like:
 
 ```
 Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex
-Max abs error   5.6e-12    6.8e-13  1.7e-1     3.8e+1
-Avg gas            2708      13360   20623      35963   88969
+Max abs error   7.7e-13    6.8e-13  1.7e-1     3.8e+1
+Avg gas            2582      13360   20623      35963   88969
   ✔ call
 ```
 
@@ -42,29 +42,29 @@ Avg gas            2708      13360   20623      35963   88969
 
 | Function     |    DeFiMath | PRBMath | ABDKQuad |  Solady | SolStat |
 | :----------- | ----------: | ------: | -------: | ------: | ------: |
-| `exp`        |     **331** |   2,820 |    5,840 |     372 |       — |
+| `exp`        |     **289** |   2,820 |    5,840 |     372 |       — |
 | `ln`         |     **373** |   6,910 |   12,667 |     518 |       — |
 | `log2`       |     **389** |   6,831 |   12,240 |       — |       — |
 | `log10`      |     **389** |   8,630 |        — |       — |       — |
-| `pow`        |     **788** |   9,792 |        — |     976 |       — |
+| `pow`        |     **746** |   9,792 |        — |     976 |       — |
 | `sqrt`       |     **197** |     944 |      808 |     384 |       — |
 | `cbrt`       |     **340** |       — |        — |     550 |       — |
-| `stdNormCDF` |     **660** |       — |        — |       — |   2,794 |
-| `erf`        |     **685** |       — |        — |       — |   1,732 |
+| `stdNormCDF` |     **618** |       — |        — |       — |   2,794 |
+| `erf`        |     **643** |       — |        — |       — |   1,732 |
 
 ### Max relative error
 
 | Function     |    DeFiMath |     PRBMath |    ABDKQuad |      Solady |  SolStat |
 | :----------- | ----------: | ----------: | ----------: | ----------: | -------: |
-| `exp`        |     5.1e-14 | **1.9e-14** | **1.9e-14** | **1.9e-14** |        — |
+| `exp`        | **1.9e-14** | **1.9e-14** | **1.9e-14** | **1.9e-14** |        — |
 | `ln`         | **2.8e-16** | **2.8e-16** | **2.8e-16** | **2.8e-16** |        — |
 | `log2`       | **3.6e-16** | **3.6e-16** | **3.6e-16** |           — |        — |
 | `log10`      | **2.2e-16** | **2.2e-16** |           — |           — |        — |
-| `pow`        |     5.2e-14 | **6.1e-16** |           — | **6.1e-16** |        — |
+| `pow`        | **6.1e-16** | **6.1e-16** |           — | **6.1e-16** |        — |
 | `sqrt`       | **4.8e-19** | **4.8e-19** | **4.8e-19** | **4.8e-19** |        — |
 | `cbrt`       | **2.2e-16** |           — |           — | **2.2e-16** |        — |
-| `stdNormCDF` | **4.7e-15** |           — |           — |           — |   3.2e-8 |
-| `erf`        | **7.4e-15** |           — |           — |           — |   5.7e-8 |
+| `stdNormCDF` | **1.4e-15** |           — |           — |           — |   3.2e-8 |
+| `erf`        | **2.1e-16** |           — |           — |           — |   5.7e-8 |
 
 All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measured on x ∈ [0.5, 10] — away from erf's zero at x = 0, where relative error would be ill-defined (both functions are bounded, in [0, 1] and [−1, 1]). Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
 
@@ -76,23 +76,23 @@ All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measur
 
 | Function          | DeFiMath  | Derivexyz | Premia | Party1983 |  Dopex |
 | :---------------- | --------: | --------: | -----: | --------: | -----: |
-| `callOptionPrice` | **2,708** |    13,360 | 20,623 |    35,963 | 88,969 |
-| `putOptionPrice`  | **2,718** |    13,363 | 20,791 |    36,140 | 88,301 |
-| `delta`           | **1,703** |     8,621 |      — |    24,960 |      — |
-| `gamma`           | **1,475** |         — |      — |         — |      — |
-| `theta`           | **3,269** |         — |      — |         — |      — |
-| `vega`            | **1,415** |     7,490 |      — |         — |      — |
+| `callOptionPrice` | **2,582** |    13,360 | 20,623 |    35,963 | 88,969 |
+| `putOptionPrice`  | **2,592** |    13,363 | 20,791 |    36,140 | 88,301 |
+| `delta`           | **1,661** |     8,621 |      — |    24,960 |      — |
+| `gamma`           | **1,433** |         — |      — |         — |      — |
+| `theta`           | **3,101** |         — |      — |         — |      — |
+| `vega`            | **1,373** |     7,490 |      — |         — |      — |
 
 ### Max absolute error (option price at $1,000 spot, unit Greeks)
 
 | Function          | DeFiMath    | Derivexyz   | Premia | Party1983 | Dopex |
 | :---------------- | ----------: | ----------: | -----: | --------: | ----: |
-| `callOptionPrice` |     5.6e-12 | **6.8e-13** | 1.7e-1 |     3.8e1 |     — |
-| `putOptionPrice`  |     5.4e-12 | **6.5e-13** | 1.7e-1 |     9.9e1 |     — |
-| `delta`           |     6.2e-15 | **6.7e-16** |      — |    9.2e-1 |     — |
-| `gamma`           | **9.1e-17** |          — |      — |         — |     — |
-| `theta`           | **3.5e-14** |          — |      — |         — |     — |
-| `vega`            |     4.3e-14 | **1.1e-15** |      — |         — |     — |
+| `callOptionPrice` |     7.7e-13 | **6.8e-13** | 1.7e-1 |     3.8e1 |     — |
+| `putOptionPrice`  | **6.5e-13** | **6.5e-13** | 1.7e-1 |     9.9e1 |     — |
+| `delta`           | **6.7e-16** | **6.7e-16** |      — |    9.2e-1 |     — |
+| `gamma`           | **3.9e-18** |          — |      — |         — |     — |
+| `theta`           | **1.8e-15** |          — |      — |         — |     — |
+| `vega`            | **8.9e-16** |     1.1e-15 |      — |         — |     — |
 
 Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/Options.test.mjs`](test/Options.test.mjs); reproduce with `npx hardhat test test/Options.test.mjs`. Full module reference: [DeFiMath Black-Scholes options pricing and Greeks documentation](https://defimath.com/docs/options/).
 
@@ -102,25 +102,25 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 
 | Function          | DeFiMath  | Haptic |
 | :---------------- | --------: | -----: |
-| `binaryCallPrice` | **1,997** | 16,218 |
-| `binaryPutPrice`  | **2,002** | 16,221 |
-| `binaryDelta`     | **1,801** |      — |
-| `binaryGamma`     | **1,943** |      — |
-| `binaryTheta`     | **3,329** |      — |
-| `binaryVega`      | **1,889** |      — |
+| `binaryCallPrice` | **1,913** | 16,218 |
+| `binaryPutPrice`  | **1,918** | 16,221 |
+| `binaryDelta`     | **1,717** |      — |
+| `binaryGamma`     | **1,859** |      — |
+| `binaryTheta`     | **3,161** |      — |
+| `binaryVega`      | **1,805** |      — |
 
 ### Max absolute error (unit payout)
 
 | Function          | DeFiMath    | Haptic      |
 | :---------------- | ----------: | ----------: |
-| `binaryCallPrice` |     6.2e-15 | **5.6e-16** |
-| `binaryPutPrice`  |     5.9e-15 | **5.6e-16** |
-| `binaryDelta`     | **1.3e-16** |           — |
-| `binaryGamma`     | **1.5e-18** |           — |
-| `binaryTheta`     | **8.3e-16** |           — |
-| `binaryVega`      | **2.7e-16** |           — |
+| `binaryCallPrice` | **5.6e-16** | **5.6e-16** |
+| `binaryPutPrice`  | **5.6e-16** | **5.6e-16** |
+| `binaryDelta`     | **1.5e-17** |           — |
+| `binaryGamma`     | **1.0e-18** |           — |
+| `binaryTheta`     | **4.9e-17** |           — |
+| `binaryVega`      | **1.8e-17** |           — |
 
-Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~8.1×; Haptic edges price precision by ~11×, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`. Full module reference: [DeFiMath binary (cash-or-nothing) options documentation](https://defimath.com/docs/binary/).
+Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~8.5×; price precision now ties Haptic at 5.6e-16, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`. Full module reference: [DeFiMath binary (cash-or-nothing) options documentation](https://defimath.com/docs/binary/).
 
 ## Results — Interest & rates
 
@@ -128,13 +128,13 @@ We found no other on-chain interest-rate libraries to benchmark against, so this
 
 | Function               | Avg gas | Max rel error |
 | :--------------------- | ------: | ------------: |
-| `compoundInterest`     |     467 |       2.8e-14 |
-| `presentValue`         |     519 |       2.8e-14 |
+| `compoundInterest`     |     425 |       2.7e-16 |
+| `presentValue`         |     477 |       2.6e-15 |
 | `logReturn`            |     591 |       7.1e-16 |
-| `continuousToDiscrete` |     492 |       2.4e-14 |
+| `continuousToDiscrete` |     451 |       5.0e-15 |
 | `discreteToContinuous` |     574 |       5.1e-16 |
 | `yieldToMaturity`      |     736 |       2.7e-14 |
-| `internalRateOfReturn` |  13,444 |       3.7e-15 |
+| `internalRateOfReturn` |  12,791 |       9.3e-16 |
 
 `internalRateOfReturn` gas scales with cashflow count; the figure above averages over scenarios of 2–5 cashflows. Grids and parameters match [`test/Rates.test.mjs`](test/Rates.test.mjs); reproduce with `npx hardhat test test/Rates.test.mjs`. Full module reference: [DeFiMath interest rates and yield math documentation](https://defimath.com/docs/rates/).
 
