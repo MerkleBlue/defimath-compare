@@ -106,10 +106,11 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0;
       let count = 0, relCount = 0, absCount = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // both branches balanced. Rel tracked where |ln(x)| >= 1, abs where |ln(x)| < 1
-      // (near the root at x = 1 where relative error would blow up).
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples.
+      // Bounds [1/e², e²] place the abs band [1/e, e] as exactly half the log range,
+      // giving a 50/50 rel/abs split.
+      const LO = 1 / Math.E ** 2, HI = Math.E ** 2;
+      for (let x = LO; x <= HI; x *= (HI / LO) ** (1 / 1000)) {
         const expected = Math.log(x);
 
         const result1 = await deFiMath.lnMG(tokens(x));
@@ -163,9 +164,10 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0;
       let count = 0, relCount = 0, absCount = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // both branches balanced. Rel tracked where |log2(x)| >= 1, abs where < 1.
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples.
+      // Bounds [1/4, 4] place the abs band [0.5, 2] as exactly half the log range,
+      // giving a 50/50 rel/abs split.
+      for (let x = 1 / 4; x <= 4; x *= 16 ** (1 / 1000)) {
         const expected = Math.log2(x);
 
         const result1 = await deFiMath.log2MG(tokens(x));
@@ -213,9 +215,10 @@ describe("DeFiMath", function () {
       let avgGas1 = 0, avgGas2 = 0;
       let count = 0, relCount = 0, absCount = 0;
 
-      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples,
-      // both branches balanced. Rel tracked where |log10(x)| >= 1, abs where < 1.
-      for (let x = 1 / 16; x <= 16; x *= 256 ** (1 / 1000)) {
+      // Synced with defimath's perf test grid: log-symmetric around 1, 1000 samples.
+      // Bounds [1/100, 100] place the abs band [0.1, 10] as exactly half the log range,
+      // giving a 50/50 rel/abs split.
+      for (let x = 1 / 100; x <= 100; x *= 10000 ** (1 / 1000)) {
         const expected = Math.log10(x);
 
         const result1 = await deFiMath.log10MG(tokens(x));
