@@ -9,14 +9,31 @@ import {
   AVG_GAS_SQRT, AVG_GAS_CBRT, AVG_GAS_ERF, AVG_GAS_CDF,
 } from "defimath-lib/constants/Constants.mjs";
 
+// JS double machine epsilon (2^-52). Any error metric ≤ this is indistinguishable
+// from the reference's own rounding noise when the reference is a JS Math function.
+const JS_PRECISION_WALL = 2.22e-16;
+const WALL_MARKER = "<2.2e-16";
+
+// Mark near-wall error values honestly: if a measurement is ≤ machine eps, we can't
+// prove whether it's a true precision result or just JS reference noise, so we say so.
+// Values well below the wall (e.g. sqrt at 1e-18 using decimal.js reference) pass
+// through — those are real precision measurements against a high-precision reference.
+function fmtError(s) {
+  const n = parseFloat(s);
+  if (isFinite(n) && n > 1e-17 && n <= JS_PRECISION_WALL) return WALL_MARKER;
+  return s;
+}
+
 // Print a padded table + footnote. `rows` = [[label, val, val, ...], ...].
 // Numeric values should already be strings (e.g. `.toExponential(1)` or `.toFixed(0)`).
+// Rows whose label starts with "Max " (rel/abs error) get the wall-marker treatment.
 function printTable(headers, rows, footnote) {
   const nameW = 16, colW = 11;
   const pad = (s, w) => String(s).padStart(w);
   console.log("Metric".padEnd(nameW) + headers.map((h) => pad(h, colW)).join(""));
   for (const [label, ...vals] of rows) {
-    console.log(label.padEnd(nameW) + vals.map((v) => pad(v, colW)).join(""));
+    const shown = label.startsWith("Max ") ? vals.map(fmtError) : vals;
+    console.log(label.padEnd(nameW) + shown.map((v) => pad(v, colW)).join(""));
   }
   if (footnote) console.log("  " + footnote);
 }
