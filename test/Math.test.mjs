@@ -1,8 +1,13 @@
 
+import { assert } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import bs from "black-scholes";
 import erf from 'math-erf';
 import { tokens, sqrtExactWei, relError } from "./Common.test.mjs";
+import {
+  AVG_GAS_EXP, AVG_GAS_LN, AVG_GAS_LOG2, AVG_GAS_LOG10, AVG_GAS_POW,
+  AVG_GAS_SQRT, AVG_GAS_CBRT, AVG_GAS_ERF, AVG_GAS_CDF,
+} from "defimath-lib/constants/Constants.mjs";
 
 // Print a padded table + footnote. `rows` = [[label, val, val, ...], ...].
 // Numeric values should already be strings (e.g. `.toExponential(1)` or `.toFixed(0)`).
@@ -90,6 +95,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_EXP, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_EXP (${AVG_GAS_EXP})`);
     });
 
     it("ln", async function () {
@@ -146,6 +152,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_LN, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_LN (${AVG_GAS_LN})`);
     });
 
     it("log2", async function () {
@@ -195,6 +202,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_LOG2, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_LOG2 (${AVG_GAS_LOG2})`);
     });
 
     it("log10", async function () {
@@ -238,6 +246,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_LOG10, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_LOG10 (${AVG_GAS_LOG10})`);
     });
 
     it("pow", async function () {
@@ -291,6 +300,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_POW, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_POW (${AVG_GAS_POW})`);
     });
 
     it("sqrt", async function () {
@@ -341,6 +351,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_SQRT, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_SQRT (${AVG_GAS_SQRT})`);
     });
 
     it("mulDiv", async function () {
@@ -392,6 +403,9 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${n} (abs only — integer arithmetic)`,
       );
+      // mulDiv gas is NOT asserted against defimath's AVG_GAS_MULDIV: the two grids
+      // differ intentionally. Compare uses 9 hand-picked cases (fast + slow path);
+      // defimath's perf uses 200 random triples. Same code, different weighting.
     });
 
     it("cbrt", async function () {
@@ -436,6 +450,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_CBRT, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_CBRT (${AVG_GAS_CBRT})`);
     });
 
     it("stdNormCDF", async function () {
@@ -470,6 +485,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (abs only — output bounded)`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_CDF, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_CDF (${AVG_GAS_CDF})`);
     });
 
     it("erf", async function () {
@@ -504,6 +520,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (abs only — output bounded)`,
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_ERF, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_ERF (${AVG_GAS_ERF})`);
     });
 
   });
