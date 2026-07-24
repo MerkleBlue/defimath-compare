@@ -7,6 +7,12 @@ import { tokens, sqrtExactWei, relError } from "./Common.test.mjs";
 import {
   AVG_GAS_EXP, AVG_GAS_LN, AVG_GAS_LOG2, AVG_GAS_LOG10, AVG_GAS_POW,
   AVG_GAS_SQRT, AVG_GAS_CBRT, AVG_GAS_ERF, AVG_GAS_CDF,
+  MAX_REL_ERROR_EXP, MAX_ABS_ERROR_EXP,
+  MAX_REL_ERROR_LN, MAX_ABS_ERROR_LN,
+  MAX_REL_ERROR_POW, MAX_ABS_ERROR_POW,
+  MAX_REL_ERROR_SQRT, MAX_ABS_ERROR_SQRT,
+  MAX_REL_ERROR_CBRT, MAX_ABS_ERROR_CBRT,
+  MAX_ABS_ERROR_ERF, MAX_ABS_ERROR_CDF,
 } from "defimath-lib/constants/Constants.mjs";
 
 // JS double machine epsilon (2^-52). Any error metric ≤ this is indistinguishable
@@ -22,6 +28,33 @@ function fmtError(s) {
   const n = parseFloat(s);
   if (isFinite(n) && n > 1e-17 && n <= JS_PRECISION_WALL) return WALL_MARKER;
   return s;
+}
+
+// Compare DeFiMath's measured error against defimath's declared bounds and assert
+// that measured <= bound. Prints a `vs limits` line showing headroom (bound / measured).
+// When the max bound is below the JS precision wall AND the reference is a JS Math
+// function (wallLimited: true), the assertion is skipped with a note — compare literally
+// can't verify a bound tighter than its own reference noise. Set wallLimited: false for
+// functions using a high-precision reference (e.g. sqrt via decimal.js).
+function assertHeadroom(fnName, { relMax, relMeas, absMax, absMeas, wallLimited = true }) {
+  const parts = [];
+  const check = (kind, max, meas) => {
+    if (max === undefined) return;
+    if (wallLimited && max <= JS_PRECISION_WALL) {
+      parts.push(`${kind} unverified (JS wall)`);
+      return; // can't verify with JS reference — skip
+    }
+    if (meas === 0) {
+      parts.push(`${kind} bit-exact`);
+    } else {
+      const effective = wallLimited ? Math.max(meas, JS_PRECISION_WALL) : meas;
+      parts.push(`${kind} ${(max / effective).toFixed(1)}x below max`);
+    }
+    assert.isAtMost(meas, max, `${fnName}: measured ${kind} ${meas} > MAX ${max}`);
+  };
+  check("rel", relMax, relMeas);
+  check("abs", absMax, absMeas);
+  console.log("  DeFiMath stats: " + parts.join(", "));
 }
 
 // Print a padded table + footnote. `rows` = [[label, val, val, ...], ...].
@@ -112,6 +145,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assertHeadroom("exp", { relMax: MAX_REL_ERROR_EXP, relMeas: maxRel1, absMax: MAX_ABS_ERROR_EXP, absMeas: maxAbs1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_EXP, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_EXP (${AVG_GAS_EXP})`);
     });
 
@@ -170,6 +204,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assertHeadroom("ln", { relMax: MAX_REL_ERROR_LN, relMeas: maxRel1, absMax: MAX_ABS_ERROR_LN, absMeas: maxAbs1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_LN, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_LN (${AVG_GAS_LN})`);
     });
 
@@ -221,6 +256,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assertHeadroom("log2", { relMax: MAX_REL_ERROR_LN, relMeas: maxRel1, absMax: MAX_ABS_ERROR_LN, absMeas: maxAbs1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_LOG2, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_LOG2 (${AVG_GAS_LOG2})`);
     });
 
@@ -266,6 +302,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assertHeadroom("log10", { relMax: MAX_REL_ERROR_LN, relMeas: maxRel1, absMax: MAX_ABS_ERROR_LN, absMeas: maxAbs1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_LOG10, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_LOG10 (${AVG_GAS_LOG10})`);
     });
 
@@ -320,6 +357,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assertHeadroom("pow", { relMax: MAX_REL_ERROR_POW, relMeas: maxRel1, absMax: MAX_ABS_ERROR_POW, absMeas: maxAbs1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_POW, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_POW (${AVG_GAS_POW})`);
     });
 
@@ -371,6 +409,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assertHeadroom("sqrt", { relMax: MAX_REL_ERROR_SQRT, relMeas: maxRel1, absMax: MAX_ABS_ERROR_SQRT, absMeas: maxAbs1, wallLimited: false });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_SQRT, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_SQRT (${AVG_GAS_SQRT})`);
     });
 
@@ -470,6 +509,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (rel: ${relCount}, abs: ${absCount})`,
       );
+      assertHeadroom("cbrt", { relMax: MAX_REL_ERROR_CBRT, relMeas: maxRel1, absMax: MAX_ABS_ERROR_CBRT, absMeas: maxAbs1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_CBRT, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_CBRT (${AVG_GAS_CBRT})`);
     });
 
@@ -505,6 +545,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (abs only — output bounded)`,
       );
+      assertHeadroom("stdNormCDF", { absMax: MAX_ABS_ERROR_CDF, absMeas: maxError1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_CDF, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_CDF (${AVG_GAS_CDF})`);
     });
 
@@ -540,6 +581,7 @@ describe("DeFiMath", function () {
         ],
         `Samples: ${count} (abs only — output bounded)`,
       );
+      assertHeadroom("erf", { absMax: MAX_ABS_ERROR_ERF, absMeas: maxError1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_ERF, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_ERF (${AVG_GAS_ERF})`);
     });
 
