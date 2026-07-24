@@ -42,15 +42,15 @@ Avg gas            2582      13360   20623      35963   88969
 
 | Function     |    DeFiMath | PRBMath | ABDKQuad |  Solady | SolStat |
 | :----------- | ----------: | ------: | -------: | ------: | ------: |
-| `exp`        |     **289** |   2,820 |    5,840 |     372 |       — |
-| `ln`         |     **373** |   6,910 |   12,667 |     518 |       — |
-| `log2`       |     **389** |   6,831 |   12,240 |       — |       — |
-| `log10`      |     **389** |   8,630 |        — |       — |       — |
-| `pow`        |     **746** |   9,792 |        — |     976 |       — |
-| `sqrt`       |     **197** |     944 |      808 |     384 |       — |
+| `exp`        |     **289** |   2,815 |    5,857 |     372 |       — |
+| `ln`         |     **390** |   6,914 |   12,826 |     518 |       — |
+| `log2`       |     **406** |   6,842 |   12,445 |       — |       — |
+| `log10`      |     **406** |   8,643 |        — |       — |       — |
+| `pow`        |     **761** |   9,943 |        — |     976 |       — |
+| `sqrt`       |     **197** |     974 |      808 |     384 |       — |
 | `cbrt`       |     **340** |       — |        — |     550 |       — |
-| `stdNormCDF` |     **618** |       — |        — |       — |   2,794 |
-| `erf`        |     **643** |       — |        — |       — |   1,732 |
+| `stdNormCDF` |     **618** |       — |        — |       — |   3,103 |
+| `erf`        |     **649** |       — |        — |       — |   2,876 |
 
 ### Max relative error
 
@@ -131,7 +131,7 @@ We found no other on-chain interest-rate libraries to benchmark against, so this
 | `compoundInterest`     |     425 |       2.7e-16 |
 | `presentValue`         |     477 |       2.6e-15 |
 | `logReturn`            |     591 |       7.1e-16 |
-| `continuousToDiscrete` |     451 |       5.0e-15 |
+| `continuousToDiscrete` |     375 |       1.6e-14 |
 | `discreteToContinuous` |     574 |       5.1e-16 |
 | `yieldToMaturity`      |     736 |       2.7e-14 |
 | `internalRateOfReturn` |  12,791 |       9.3e-16 |
