@@ -70,7 +70,7 @@ function jsConditionalValueAtRisk(prices, confidence) {
 
 const seriesGen = (n, fn) => Array.from({ length: n }, (_, i) => fn(i));
 
-describe("DeFiMathStats", function () {
+describe("Stats", function () {
   async function deployCompare() {
     const StatsWrapper = await ethers.getContractFactory("StatsWrapper");
     const stats = await StatsWrapper.deploy();

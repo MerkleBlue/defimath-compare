@@ -56,10 +56,10 @@ function binaryPutWrapped(spot, strike, timeSec, vol, rate) {
   return binaryRef(spot, strike, timeSec, vol, rate).putPrice;
 }
 
-describe("DeFiMathBinary", function () {
+describe("BinaryOptions", function () {
   async function deployCompare() {
-    const BinaryWrapper = await ethers.getContractFactory("BinaryWrapper");
-    const binary = await BinaryWrapper.deploy();
+    const BinaryOptionsWrapper = await ethers.getContractFactory("BinaryOptionsWrapper");
+    const binary = await BinaryOptionsWrapper.deploy();
 
     // Haptic's BlackScholes has public functions, so it must be deployed and linked
     const BlackScholes = await ethers.getContractFactory("contracts/adapters/derivatives/binary/haptic/BlackScholes.sol:BlackScholes");

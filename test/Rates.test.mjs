@@ -25,7 +25,7 @@ function jsInternalRateOfReturn(cashflows, times, guess) {
   throw new Error("No convergence");
 }
 
-describe("DeFiMathRates", function () {
+describe("Rates", function () {
   async function deployCompare() {
     const RatesWrapper = await ethers.getContractFactory("RatesWrapper");
     const rates = await RatesWrapper.deploy();

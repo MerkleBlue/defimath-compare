@@ -19,7 +19,7 @@ function blackScholesWrapped(spot, strike, time, vol, rate, callOrPut) {
   return Math.max(0, bs.blackScholes(spot, strike, time, vol, rate, callOrPut));
 }
 
-describe("DeFiMathBlackScholes", function () {
+describe("BlackScholes", function () {
   async function deployCompare() {
     const BlackScholesWrapper = await ethers.getContractFactory("BlackScholesWrapper");
     const options = await BlackScholesWrapper.deploy();

@@ -120,7 +120,7 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 | `binaryTheta`     | **4.9e-17** |           — |
 | `binaryVega`      | **1.8e-17** |           — |
 
-Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~8.5×; price precision now ties Haptic at 5.6e-16, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/Binary.test.mjs`](test/Binary.test.mjs); reproduce with `npx hardhat test test/Binary.test.mjs`. Full module reference: [DeFiMath binary (cash-or-nothing) options documentation](https://defimath.com/docs/binary/).
+Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~8.5×; price precision now ties Haptic at 5.6e-16, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/BinaryOptions.test.mjs`](test/BinaryOptions.test.mjs); reproduce with `npx hardhat test test/BinaryOptions.test.mjs`. Full module reference: [DeFiMath binary (cash-or-nothing) options documentation](https://defimath.com/docs/binary/).
 
 ## Results — Interest & rates
 
@@ -168,7 +168,7 @@ contracts/
 test/
   Math.test.mjs       Compare suite for the DeFiMath math library.
   Options.test.mjs    Compare suite for European option pricing + Greeks + IV.
-  Binary.test.mjs     Compare suite for cash-or-nothing binary options.
+  BinaryOptions.test.mjs     Compare suite for cash-or-nothing binary options.
   Rates.test.mjs      Measure suite for interest-rate functions (DeFiMath-only).
   Stats.test.mjs      Measure suite for statistics functions (DeFiMath-only).
   Common.test.mjs     Shared helpers (tokens, time constants, etc.).
@@ -188,7 +188,7 @@ import "defimath-lib/contracts/derivatives/BlackScholes.sol";
 contract BlackScholesWrapper {
     function getCallOptionPriceMG(...) external view returns (uint256 price, uint256 gasUsed) {
         uint256 startGas = gasleft();
-        price = DeFiMathBlackScholes.getCallOptionPrice(...);
+        price = BlackScholes.getCallOptionPrice(...);
         gasUsed = startGas - gasleft();
     }
     // ...
