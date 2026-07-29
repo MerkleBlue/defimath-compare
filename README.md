@@ -154,7 +154,7 @@ We found no other on-chain statistics libraries to benchmark against, so this se
 | `valueAtRisk`             |  36,752 |       1.9e-14 |
 | `conditionalValueAtRisk`  |  32,917 |       2.5e-14 |
 
-`valueAtRisk` precision is measured against `simple-statistics`' `quantile`; all others against direct JavaScript reference implementations. Grids and parameters match [`test/Stats.test.mjs`](test/Stats.test.mjs); reproduce with `npx hardhat test test/Stats.test.mjs`. Full module reference: [DeFiMath statistics and risk metrics documentation](https://defimath.com/docs/statistics/).
+`valueAtRisk` precision is measured against `simple-statistics`' `quantile`; all others against direct JavaScript reference implementations. Grids and parameters match [`test/Statistics.test.mjs`](test/Statistics.test.mjs); reproduce with `npx hardhat test test/Statistics.test.mjs`. Full module reference: [DeFiMath statistics and risk metrics documentation](https://defimath.com/docs/statistics/).
 
 ## Layout
 
@@ -170,7 +170,7 @@ test/
   Options.test.mjs    Compare suite for European option pricing + Greeks + IV.
   BinaryOptions.test.mjs     Compare suite for cash-or-nothing binary options.
   Rates.test.mjs      Measure suite for interest-rate functions (DeFiMath-only).
-  Stats.test.mjs      Measure suite for statistics functions (DeFiMath-only).
+  Statistics.test.mjs      Measure suite for statistics functions (DeFiMath-only).
   Common.test.mjs     Shared helpers (tokens, time constants, etc.).
 ```
 

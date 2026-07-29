@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.34;
 
-import "defimath-lib/contracts/finance/Rates.sol";
+import "defimath-lib/contracts/rates/Rates.sol";
 
 contract RatesWrapper {
 
