@@ -180,15 +180,15 @@ implementations (`Math.log` / `Math.exp` / `Math.sqrt`).
 
 ## How it works
 
-The `OptionsWrapper`, `MathWrapper`, etc. contracts in `contracts/wrappers/` import DeFiMath from npm:
+The `BlackScholesWrapper`, `MathWrapper`, etc. contracts in `contracts/wrappers/` import DeFiMath from npm:
 
 ```solidity
-import "defimath-lib/contracts/derivatives/Options.sol";
+import "defimath-lib/contracts/derivatives/BlackScholes.sol";
 
-contract OptionsWrapper {
+contract BlackScholesWrapper {
     function getCallOptionPriceMG(...) external view returns (uint256 price, uint256 gasUsed) {
         uint256 startGas = gasleft();
-        price = DeFiMathOptions.getCallOptionPrice(...);
+        price = DeFiMathBlackScholes.getCallOptionPrice(...);
         gasUsed = startGas - gasleft();
     }
     // ...

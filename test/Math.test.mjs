@@ -71,7 +71,7 @@ function printTable(headers, rows, footnote) {
   if (footnote) console.log("  " + footnote);
 }
 
-describe("DeFiMath", function () {
+describe("Math", function () {
   async function deployCompare() {
     const MathWrapper = await ethers.getContractFactory("MathWrapper");
     const deFiMath = await MathWrapper.deploy();

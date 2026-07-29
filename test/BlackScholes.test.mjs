@@ -19,10 +19,10 @@ function blackScholesWrapped(spot, strike, time, vol, rate, callOrPut) {
   return Math.max(0, bs.blackScholes(spot, strike, time, vol, rate, callOrPut));
 }
 
-describe("DeFiMathOptions", function () {
+describe("DeFiMathBlackScholes", function () {
   async function deployCompare() {
-    const OptionsWrapper = await ethers.getContractFactory("OptionsWrapper");
-    const options = await OptionsWrapper.deploy();
+    const BlackScholesWrapper = await ethers.getContractFactory("BlackScholesWrapper");
+    const options = await BlackScholesWrapper.deploy();
 
     const AdapterDerivexyz = await ethers.getContractFactory("AdapterDerivexyz");
     const adapterDerivexyz = await AdapterDerivexyz.deploy();
