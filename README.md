@@ -11,7 +11,7 @@ DeFiMath is benchmarked against:
 | Category    | Libraries |
 | :---------- | :-------- |
 | Math        | PRBMath, ABDK, Solady, SolStat |
-| Options     | Derivexyz, Premia, Party1983, Dopex |
+| Black-Scholes | Derivexyz, Premia, Party1983, Dopex |
 | Binary      | Haptic |
 | Rates       | — (no other on-chain implementations found) |
 | Statistics  | — (no other on-chain implementations found) |
@@ -94,7 +94,7 @@ All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measur
 | `theta`           | **1.8e-15** |          — |      — |         — |     — |
 | `vega`            | **8.9e-16** |     1.1e-15 |      — |         — |     — |
 
-Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/Options.test.mjs`](test/Options.test.mjs); reproduce with `npx hardhat test test/Options.test.mjs`. Full module reference: [DeFiMath Black-Scholes options pricing and Greeks documentation](https://defimath.com/docs/options/).
+Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/BlackScholes.test.mjs`](test/BlackScholes.test.mjs); reproduce with `npx hardhat test test/BlackScholes.test.mjs`. Full module reference: [DeFiMath Black-Scholes options pricing and Greeks documentation](https://defimath.com/docs/black-scholes/).
 
 ## Results — Binary (cash-or-nothing) options
 
@@ -167,7 +167,7 @@ contracts/
                with a small adapter contract that conforms to a common interface.
 test/
   Math.test.mjs       Compare suite for the DeFiMath math library.
-  Options.test.mjs    Compare suite for European option pricing + Greeks + IV.
+  BlackScholes.test.mjs    Compare suite for European option pricing + Greeks + IV.
   BinaryOptions.test.mjs     Compare suite for cash-or-nothing binary options.
   Rates.test.mjs      Measure suite for interest-rate functions (DeFiMath-only).
   Statistics.test.mjs      Measure suite for statistics functions (DeFiMath-only).
