@@ -20,6 +20,26 @@ Each function is measured for:
 - **Average gas** (over a typical input range)
 - **Maximum absolute or relative error** vs. a JavaScript reference (`black-scholes`, `greeks`, `math-erf`)
 
+## Benchmarked library versions
+
+Every competitor is (being) pinned to an **exact version** so the numbers below are reproducible and we always know precisely what we measured against. Pinned packages are exact (no `^`) in [`package.json`](package.json) + `package-lock.json`, and their adapters import them from `node_modules` instead of a vendored copy.
+
+| Library | Version | Source | How it's pinned |
+| :------ | :------ | :----- | :-------------- |
+| Solady | `0.1.26` | [vectorized/solady](https://github.com/vectorized/solady) | npm `solady` (exact) |
+| PRBMath | `4.1.2` | [PaulRBerg/prb-math](https://github.com/PaulRBerg/prb-math) | npm `@prb/math` (exact) |
+| ABDK | `3.2.0` | [abdk-consulting/abdk-libraries-solidity](https://github.com/abdk-consulting/abdk-libraries-solidity) | npm `abdk-libraries-solidity` (exact) |
+| SolStat | vendored | [primitivefinance/solstat](https://github.com/primitivefinance/solstat) | copy — pinning pending |
+| Derivexyz (Lyra) | vendored | Lyra / Derivexyz protocol | extracted copy — pinning pending |
+| Premia | vendored | Premia protocol | extracted copy — pinning pending |
+| Party1983 | vendored | partylikeits1983 | extracted copy — pinning pending |
+| Dopex | vendored | Dopex protocol | extracted copy — pinning pending |
+| Haptic | vendored | Haptic protocol | extracted copy — pinning pending |
+
+The **ABDK** row above is the standalone `ABDKMathQuad` math benchmark. The Premia and Dopex extracted models bundle their **own** vendored ABDK sub-copy — that's part of their rows, not the pinned one above, and gets addressed when those adapters are migrated.
+
+Migrating the remaining vendored copies to pinned dependencies is tracked in the external-library pinning runbook in `defimath-manage`. Protocol code extracted from a larger monorepo (Derivexyz, Premia, Dopex, Haptic, Party) may stay vendored, but each such copy will carry a provenance note recording its upstream repo + exact commit.
+
 ## Running
 
 ```bash

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.34;
 
-import { SD59x18, sd, exp, ln, log2, log10, sqrt, pow } from "./lib/SD59x18.sol";
-import { mulDiv } from "./lib/Common.sol";
+import { SD59x18, sd, exp, ln, log2, log10, sqrt, pow } from "@prb/math/src/SD59x18.sol";
+import { mulDiv } from "@prb/math/src/Common.sol";
 
 contract AdapterPRBMath {
 
