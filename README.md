@@ -76,8 +76,8 @@ All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measur
 
 | Function          | DeFiMath  | Derivexyz | Premia | Party1983 |  Dopex |
 | :---------------- | --------: | --------: | -----: | --------: | -----: |
-| `callOptionPrice` | **2,582** |    13,360 | 20,623 |    35,963 | 88,969 |
-| `putOptionPrice`  | **2,592** |    13,363 | 20,791 |    36,140 | 88,301 |
+| `call` | **2,582** |    13,360 | 20,623 |    35,963 | 88,969 |
+| `put`  | **2,592** |    13,363 | 20,791 |    36,140 | 88,301 |
 | `delta`           | **1,661** |     8,621 |      — |    24,960 |      — |
 | `gamma`           | **1,433** |         — |      — |         — |      — |
 | `theta`           | **3,101** |         — |      — |         — |      — |
@@ -87,8 +87,8 @@ All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measur
 
 | Function          | DeFiMath    | Derivexyz   | Premia | Party1983 | Dopex |
 | :---------------- | ----------: | ----------: | -----: | --------: | ----: |
-| `callOptionPrice` |     7.7e-13 | **6.8e-13** | 1.7e-1 |     3.8e1 |     — |
-| `putOptionPrice`  | **6.5e-13** | **6.5e-13** | 1.7e-1 |     9.9e1 |     — |
+| `call` |     7.7e-13 | **6.8e-13** | 1.7e-1 |     3.8e1 |     — |
+| `put`  | **6.5e-13** | **6.5e-13** | 1.7e-1 |     9.9e1 |     — |
 | `delta`           | **6.7e-16** | **6.7e-16** |      — |    9.2e-1 |     — |
 | `gamma`           | **3.9e-18** |          — |      — |         — |     — |
 | `theta`           | **1.8e-15** |          — |      — |         — |     — |
@@ -102,25 +102,25 @@ Dashes indicate the library doesn't implement that function. Dopex returns price
 
 | Function          | DeFiMath  | Haptic |
 | :---------------- | --------: | -----: |
-| `binaryCallPrice` | **1,913** | 16,218 |
-| `binaryPutPrice`  | **1,918** | 16,221 |
-| `binaryDelta`     | **1,717** |      — |
-| `binaryGamma`     | **1,859** |      — |
-| `binaryTheta`     | **3,161** |      — |
-| `binaryVega`      | **1,805** |      — |
+| `call` | **1,913** | 16,218 |
+| `put`  | **1,918** | 16,221 |
+| `delta`     | **1,717** |      — |
+| `gamma`     | **1,859** |      — |
+| `theta`     | **3,161** |      — |
+| `vega`      | **1,805** |      — |
 
 ### Max absolute error (unit payout)
 
 | Function          | DeFiMath    | Haptic      |
 | :---------------- | ----------: | ----------: |
-| `binaryCallPrice` | **5.6e-16** | **5.6e-16** |
-| `binaryPutPrice`  | **5.6e-16** | **5.6e-16** |
-| `binaryDelta`     | **1.5e-17** |           — |
-| `binaryGamma`     | **1.0e-18** |           — |
-| `binaryTheta`     | **4.9e-17** |           — |
-| `binaryVega`      | **1.8e-17** |           — |
+| `call` | **5.6e-16** | **5.6e-16** |
+| `put`  | **5.6e-16** | **5.6e-16** |
+| `delta`     | **1.5e-17** |           — |
+| `gamma`     | **1.0e-18** |           — |
+| `theta`     | **4.9e-17** |           — |
+| `vega`      | **1.8e-17** |           — |
 
-Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `binaryDelta` / `binaryGamma` / `binaryTheta` / `binaryVega` rows show DeFiMath only. DeFiMath wins gas on `binaryCallPrice` / `binaryPutPrice` by ~8.5×; price precision now ties Haptic at 5.6e-16, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/BinaryOptions.test.mjs`](test/BinaryOptions.test.mjs); reproduce with `npx hardhat test test/BinaryOptions.test.mjs`. Full module reference: [DeFiMath binary (cash-or-nothing) options documentation](https://defimath.com/docs/binary/).
+Haptic is the only on-chain binary-options implementation we found. It doesn't ship greeks, so `delta` / `gamma` / `theta` / `vega` rows show DeFiMath only. DeFiMath wins gas on `call` / `put` by ~8.5×; price precision now ties Haptic at 5.6e-16, both well below ulp at unit payout. Precision is measured against a true-math Black-Scholes reference (`Math.log` / `Math.exp` / `math-erf`), independent of any DeFiMath algorithm. Grids match [`test/BinaryOptions.test.mjs`](test/BinaryOptions.test.mjs); reproduce with `npx hardhat test test/BinaryOptions.test.mjs`. Full module reference: [DeFiMath binary (cash-or-nothing) options documentation](https://defimath.com/docs/binary/).
 
 ## Results — Interest & rates
 

@@ -92,7 +92,7 @@ describe("BinaryOptions", function () {
             for (const rate of rates) {
               const expected = binaryCallWrapped(1000, strike, time * SEC_IN_DAY, vol, rate);
 
-              const result1 = await binary.binaryCallPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await binary.callMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.price.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -130,7 +130,7 @@ describe("BinaryOptions", function () {
             for (const rate of rates) {
               const expected = binaryPutWrapped(1000, strike, time * SEC_IN_DAY, vol, rate);
 
-              const result1 = await binary.binaryPutPriceMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
+              const result1 = await binary.putMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
               const price1 = result1.price.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
@@ -182,22 +182,22 @@ describe("BinaryOptions", function () {
 
     it("delta", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.binaryDeltaMG.bind(binary), "deltaCall", "deltaPut");
+      await benchGreek(binary.deltaMG.bind(binary), "deltaCall", "deltaPut");
     });
 
     it("gamma", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.binaryGammaMG.bind(binary), "gammaCall", "gammaPut");
+      await benchGreek(binary.gammaMG.bind(binary), "gammaCall", "gammaPut");
     });
 
     it("theta", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.binaryThetaMG.bind(binary), "thetaCall", "thetaPut");
+      await benchGreek(binary.thetaMG.bind(binary), "thetaCall", "thetaPut");
     });
 
     it("vega", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.binaryVegaMG.bind(binary), "vegaCall", "vegaPut");
+      await benchGreek(binary.vegaMG.bind(binary), "vegaCall", "vegaPut");
     });
   });
 });
