@@ -29,16 +29,16 @@ Every competitor is (being) pinned to an **exact version** so the numbers below 
 | Solady | `0.1.26` | [vectorized/solady](https://github.com/vectorized/solady) | npm `solady` (exact) |
 | PRBMath | `4.1.2` | [PaulRBerg/prb-math](https://github.com/PaulRBerg/prb-math) | npm `@prb/math` (exact) |
 | ABDK | `3.2.0` | [abdk-consulting/abdk-libraries-solidity](https://github.com/abdk-consulting/abdk-libraries-solidity) | npm `abdk-libraries-solidity` (exact) |
-| SolStat | vendored | [primitivefinance/solstat](https://github.com/primitivefinance/solstat) | copy — pinning pending |
-| Derivexyz (Lyra) | vendored | Lyra / Derivexyz protocol | extracted copy — pinning pending |
-| Premia | vendored | Premia protocol | extracted copy — pinning pending |
-| Party1983 | vendored | partylikeits1983 | extracted copy — pinning pending |
-| Dopex | vendored | Dopex protocol | extracted copy — pinning pending |
-| Haptic | vendored | Haptic protocol | extracted copy — pinning pending |
+| SolStat | `v1.0.0-beta` | [primitivefinance/solstat](https://github.com/primitivefinance/solstat) | vendored — Foundry remappings block a clean npm link; version recorded in [PROVENANCE](contracts/adapters/math/solstat/PROVENANCE.md) |
+| Derivexyz (Lyra) | vendored | [lyra-finance/lyra-protocol](https://github.com/lyra-finance/lyra-protocol) | extracted copy — [PROVENANCE](contracts/adapters/derivatives/options/derivexyz/PROVENANCE.md) |
+| Premia | vendored | [Premian-Labs/premia-contracts](https://github.com/Premian-Labs/premia-contracts) | extracted copy — [PROVENANCE](contracts/adapters/derivatives/options/premia/PROVENANCE.md) |
+| Party1983 | vendored | [partylikeits1983/black_scholes_solidity](https://github.com/partylikeits1983/black_scholes_solidity) | extracted copy — [PROVENANCE](contracts/adapters/derivatives/options/partlikeits1983/PROVENANCE.md) |
+| Dopex | vendored | upstream unconfirmed (rebranded Stryke) | extracted copy — [PROVENANCE](contracts/adapters/derivatives/options/dopex/PROVENANCE.md) |
+| Haptic | vendored | upstream unconfirmed | extracted copy — [PROVENANCE](contracts/adapters/derivatives/binary/haptic/PROVENANCE.md) |
 
 The **ABDK** row above is the standalone `ABDKMathQuad` math benchmark. The Premia and Dopex extracted models bundle their **own** vendored ABDK sub-copy — that's part of their rows, not the pinned one above, and gets addressed when those adapters are migrated.
 
-Migrating the remaining vendored copies to pinned dependencies is tracked in the external-library pinning runbook in `defimath-manage`. Protocol code extracted from a larger monorepo (Derivexyz, Premia, Dopex, Haptic, Party) may stay vendored, but each such copy will carry a provenance note recording its upstream repo + exact commit.
+Protocol code extracted from a larger monorepo (Derivexyz, Premia, Dopex, Haptic, Party) can't be cleanly linked — it's single files lifted out of Foundry monorepos with rewritten imports — so it stays vendored, but each carries a `PROVENANCE.md` recording its upstream project, repo, files, licenses, and modifications. The full strategy and status are tracked in the external-library pinning runbook in `defimath-manage`.
 
 ## Running
 
