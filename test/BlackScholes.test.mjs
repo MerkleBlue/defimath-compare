@@ -49,6 +49,7 @@ describe("BlackScholes", function () {
       const rates = [0.05, 0.1, 0.2];
 
       let maxError1 = 0, maxError2 = 0, maxError3 = 0, maxError4 = 0;
+      let maxRel1 = 0, maxRel2 = 0, maxRel3 = 0, maxRel4 = 0;
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0, avgGas5 = 0;
       let count = 0;
 
@@ -84,12 +85,20 @@ describe("BlackScholes", function () {
               maxError2 = Math.max(maxError2, Math.abs(price2 - expected));
               maxError3 = Math.max(maxError3, Math.abs(price3 - expected));
               maxError4 = Math.max(maxError4, Math.abs(price4 - expected));
+              // prices are >= 1 across this strike range → relative error is the meaningful metric
+              if (Math.abs(expected) >= 1) {
+                maxRel1 = Math.max(maxRel1, Math.abs(price1 - expected) / Math.abs(expected));
+                maxRel2 = Math.max(maxRel2, Math.abs(price2 - expected) / Math.abs(expected));
+                maxRel3 = Math.max(maxRel3, Math.abs(price3 - expected) / Math.abs(expected));
+                maxRel4 = Math.max(maxRel4, Math.abs(price4 - expected) / Math.abs(expected));
+              }
             }
           }
         }
       }
       console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
       console.log("Max abs error  ", (maxError1).toExponential(1) + "   ", (maxError2).toExponential(1) + " ", (maxError3).toExponential(1) + "    ", (maxError4).toExponential(1));
+      console.log("Max rel error  ", (maxRel1).toExponential(1) + "   ", (maxRel2).toExponential(1) + " ", (maxRel3).toExponential(1) + "    ", (maxRel4).toExponential(1));
       console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "  " + (avgGas3 / count).toFixed(0), "     " + (avgGas4 / count).toFixed(0), "  " + (avgGas5 / count).toFixed(0));
     });
 
@@ -102,6 +111,7 @@ describe("BlackScholes", function () {
       const rates = [0.05, 0.1, 0.2];
 
       let maxError1 = 0, maxError2 = 0, maxError3 = 0, maxError4 = 0;
+      let maxRel1 = 0, maxRel2 = 0, maxRel3 = 0, maxRel4 = 0;
       let avgGas1 = 0, avgGas2 = 0, avgGas3 = 0, avgGas4 = 0, avgGas5 = 0;
       let count = 0;
 
@@ -136,12 +146,20 @@ describe("BlackScholes", function () {
               maxError2 = Math.max(maxError2, Math.abs(price2 - expected));
               maxError3 = Math.max(maxError3, Math.abs(price3 - expected));
               maxError4 = Math.max(maxError4, Math.abs(price4 - expected));
+              // prices are >= 1 across this strike range → relative error is the meaningful metric
+              if (Math.abs(expected) >= 1) {
+                maxRel1 = Math.max(maxRel1, Math.abs(price1 - expected) / Math.abs(expected));
+                maxRel2 = Math.max(maxRel2, Math.abs(price2 - expected) / Math.abs(expected));
+                maxRel3 = Math.max(maxRel3, Math.abs(price3 - expected) / Math.abs(expected));
+                maxRel4 = Math.max(maxRel4, Math.abs(price4 - expected) / Math.abs(expected));
+              }
             }
           }
         }
       }
       console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
       console.log("Max abs error  ", (maxError1).toExponential(1) + "   ", (maxError2).toExponential(1) + " ", (maxError3).toExponential(1) + "    ", (maxError4).toExponential(1));
+      console.log("Max rel error  ", (maxRel1).toExponential(1) + "   ", (maxRel2).toExponential(1) + " ", (maxRel3).toExponential(1) + "    ", (maxRel4).toExponential(1));
       console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "  " + (avgGas3 / count).toFixed(0), "     " + (avgGas4 / count).toFixed(0), "  " + (avgGas5 / count).toFixed(0));
     });
 
@@ -230,6 +248,7 @@ describe("BlackScholes", function () {
       const rates = [0.05, 0.1, 0.2];
 
       let maxError1 = 0;
+      let maxRel1 = 0;
       let avgGas1 = 0;
       let count = 0;
 
@@ -245,12 +264,16 @@ describe("BlackScholes", function () {
 
               count++;
               maxError1 = Math.max(maxError1, Math.abs(price1 - expected));
+              // |theta| exceeds 1 for longer-dated options → relative error applies there
+              if (Math.abs(expected) >= 1) maxRel1 = Math.max(maxRel1, Math.abs(price1 - expected) / Math.abs(expected));
             }
           }
         }
       }
+      const fmtRel = (r) => r === 0 ? "—" : r.toExponential(1);
       console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
       console.log("Max abs error  ", (maxError1).toExponential(1));
+      console.log("Max rel error  ", fmtRel(maxRel1));
       console.log("Avg gas           ", (avgGas1 / count).toFixed(0));
     });
 
@@ -263,6 +286,7 @@ describe("BlackScholes", function () {
       const rates = [0.05, 0.1, 0.2];
 
       let maxError1 = 0, maxError2 = 0;
+      let maxRel1 = 0, maxRel2 = 0;
       let avgGas1 = 0, avgGas2 = 0;
       let count = 0;
 
@@ -283,12 +307,19 @@ describe("BlackScholes", function () {
               count++;
               maxError1 = Math.max(maxError1, Math.abs(price1 - expected));
               maxError2 = Math.max(maxError2, Math.abs(price2 - expected));
+              // vega exceeds 1 for longer-dated options → relative error applies there
+              if (Math.abs(expected) >= 1) {
+                maxRel1 = Math.max(maxRel1, Math.abs(price1 - expected) / Math.abs(expected));
+                maxRel2 = Math.max(maxRel2, Math.abs(price2 - expected) / Math.abs(expected));
+              }
             }
           }
         }
       }
+      const fmtRel = (r) => r === 0 ? "—" : r.toExponential(1);
       console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
       console.log("Max abs error  ", (maxError1).toExponential(1) + "   ", (maxError2).toExponential(1));
+      console.log("Max rel error  ", fmtRel(maxRel1) + "   ", fmtRel(maxRel2));
       console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0));
     });
   });

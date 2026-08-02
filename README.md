@@ -114,6 +114,17 @@ All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measur
 | `theta`           | **1.8e-15** |          — |      — |         — |     — |
 | `vega`            | **8.9e-16** |     1.1e-15 |      — |         — |     — |
 
+### Max relative error (values that exceed 1)
+
+Option prices — and `theta` / `vega` for longer-dated options — exceed 1, so relative error is the scale-invariant view there. (`delta` / `gamma` stay ≤ 1 and are compared by absolute error above.)
+
+| Function | DeFiMath    | Derivexyz   | Premia | Party1983 | Dopex |
+| :------- | ----------: | ----------: | -----: | --------: | ----: |
+| `call`   | **1.4e-13** |     1.5e-13 | 7.6e-3 |     1.0e0 |     — |
+| `put`    | **4.9e-14** | **4.7e-14** | 7.9e-3 |     1.0e0 |     — |
+| `theta`  | **1.2e-15** |           — |      — |         — |     — |
+| `vega`   | **7.2e-16** |     7.3e-16 |      — |         — |     — |
+
 Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/BlackScholes.test.mjs`](test/BlackScholes.test.mjs); reproduce with `npx hardhat test test/BlackScholes.test.mjs`. Full module reference: [DeFiMath Black-Scholes options pricing and Greeks documentation](https://defimath.com/docs/black-scholes/).
 
 ## Results — Binary (cash-or-nothing) options
