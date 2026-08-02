@@ -2,7 +2,7 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import bs from "black-scholes";
 import greeks from "greeks";
-import { tokens, SEC_IN_DAY } from "./Common.test.mjs";
+import { tokens, SEC_IN_DAY, printMetrics, e1, relOrDash, avg } from "./Common.test.mjs";
 
 // bs has a bug with time = 0, it returns NaN, so we are wrapping it
 function blackScholesWrapped(spot, strike, time, vol, rate, callOrPut) {
@@ -96,10 +96,14 @@ describe("BlackScholes", function () {
           }
         }
       }
-      console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
-      console.log("Max abs error  ", (maxError1).toExponential(1) + "   ", (maxError2).toExponential(1) + " ", (maxError3).toExponential(1) + "    ", (maxError4).toExponential(1));
-      console.log("Max rel error  ", (maxRel1).toExponential(1) + "   ", (maxRel2).toExponential(1) + " ", (maxRel3).toExponential(1) + "    ", (maxRel4).toExponential(1));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "  " + (avgGas3 / count).toFixed(0), "     " + (avgGas4 / count).toFixed(0), "  " + (avgGas5 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath", "Derivexyz", "Premia", "Party1983", "Dopex"],
+        [
+          ["Max abs error", e1(maxError1), e1(maxError2), e1(maxError3), e1(maxError4), "—"],
+          ["Max rel error", e1(maxRel1), e1(maxRel2), e1(maxRel3), e1(maxRel4), "—"],
+          ["Avg gas", avg(avgGas1, count), avg(avgGas2, count), avg(avgGas3, count), avg(avgGas4, count), avg(avgGas5, count)],
+        ]
+      );
     });
 
     it("put", async function () {
@@ -157,10 +161,14 @@ describe("BlackScholes", function () {
           }
         }
       }
-      console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
-      console.log("Max abs error  ", (maxError1).toExponential(1) + "   ", (maxError2).toExponential(1) + " ", (maxError3).toExponential(1) + "    ", (maxError4).toExponential(1));
-      console.log("Max rel error  ", (maxRel1).toExponential(1) + "   ", (maxRel2).toExponential(1) + " ", (maxRel3).toExponential(1) + "    ", (maxRel4).toExponential(1));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0), "  " + (avgGas3 / count).toFixed(0), "     " + (avgGas4 / count).toFixed(0), "  " + (avgGas5 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath", "Derivexyz", "Premia", "Party1983", "Dopex"],
+        [
+          ["Max abs error", e1(maxError1), e1(maxError2), e1(maxError3), e1(maxError4), "—"],
+          ["Max rel error", e1(maxRel1), e1(maxRel2), e1(maxRel3), e1(maxRel4), "—"],
+          ["Avg gas", avg(avgGas1, count), avg(avgGas2, count), avg(avgGas3, count), avg(avgGas4, count), avg(avgGas5, count)],
+        ]
+      );
     });
 
     it("delta", async function () {
@@ -201,9 +209,13 @@ describe("BlackScholes", function () {
           }
         }
       }
-      console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
-      console.log("Max abs error  ", (maxError1).toExponential(1) + "   ", (maxError2).toExponential(1) + "            ", (maxError4).toExponential(1));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0) + "              " + (avgGas4 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath", "Derivexyz", "Party1983"],
+        [
+          ["Max abs error", e1(maxError1), e1(maxError2), e1(maxError4)],
+          ["Avg gas", avg(avgGas1, count), avg(avgGas2, count), avg(avgGas4, count)],
+        ]
+      );
     });
 
     it("gamma", async function () {
@@ -234,9 +246,13 @@ describe("BlackScholes", function () {
           }
         }
       }
-      console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
-      console.log("Max abs error  ", (maxError1).toExponential(1));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath"],
+        [
+          ["Max abs error", e1(maxError1)],
+          ["Avg gas", avg(avgGas1, count)],
+        ]
+      );
     });
 
     it("theta", async function () {
@@ -270,11 +286,14 @@ describe("BlackScholes", function () {
           }
         }
       }
-      const fmtRel = (r) => r === 0 ? "—" : r.toExponential(1);
-      console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
-      console.log("Max abs error  ", (maxError1).toExponential(1));
-      console.log("Max rel error  ", fmtRel(maxRel1));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath"],
+        [
+          ["Max abs error", e1(maxError1)],
+          ["Max rel error", relOrDash(maxRel1)],
+          ["Avg gas", avg(avgGas1, count)],
+        ]
+      );
     });
 
     it("vega", async function () {
@@ -316,11 +335,14 @@ describe("BlackScholes", function () {
           }
         }
       }
-      const fmtRel = (r) => r === 0 ? "—" : r.toExponential(1);
-      console.log("Metric         DeFiMath  Derivexyz  Premia  Party1983   Dopex");
-      console.log("Max abs error  ", (maxError1).toExponential(1) + "   ", (maxError2).toExponential(1));
-      console.log("Max rel error  ", fmtRel(maxRel1) + "   ", fmtRel(maxRel2));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "     " + (avgGas2 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath", "Derivexyz"],
+        [
+          ["Max abs error", e1(maxError1), e1(maxError2)],
+          ["Max rel error", relOrDash(maxRel1), relOrDash(maxRel2)],
+          ["Avg gas", avg(avgGas1, count), avg(avgGas2, count)],
+        ]
+      );
     });
   });
 });

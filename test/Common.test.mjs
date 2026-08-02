@@ -18,6 +18,18 @@ export function relError(actualWei, expected) {
   return new Decimal(actualWei.toString()).minus(expected).abs().div(expected);
 }
 
+// ── Aligned console tables ───────────────────────────────────────────────────
+// Column 0 (row labels) left-justified; value columns right-justified. Pass
+// already-formatted string cells (use e1 / relOrDash / avg below).
+export function printMetrics(cols, rows) {
+  const w = cols.map((_, i) => Math.max(...[cols, ...rows].map(r => String(r[i] ?? "").length)));
+  const line = (r) => r.map((c, i) => i === 0 ? String(c ?? "").padEnd(w[0]) : String(c ?? "").padStart(w[i] + 3)).join("");
+  for (const r of [cols, ...rows]) console.log(line(r));
+}
+export const e1 = (x) => x.toExponential(1);                        // abs / rel error cell
+export const relOrDash = (x) => x === 0 ? "—" : x.toExponential(1); // rel; "—" when no |result| >= 1 sample
+export const avg = (sum, n) => String(Math.round(sum / n));         // average-gas cell
+
 export const SEC_IN_DAY = 24 * 60 * 60;
 export const SEC_IN_YEAR = 365 * 24 * 60 * 60;
 

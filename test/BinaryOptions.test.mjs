@@ -1,7 +1,7 @@
 
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import erf from "math-erf";
-import { tokens, SEC_IN_DAY } from "./Common.test.mjs";
+import { tokens, SEC_IN_DAY, printMetrics, e1, avg } from "./Common.test.mjs";
 
 // True-math binary (cash-or-nothing) Black-Scholes reference.
 //
@@ -107,9 +107,13 @@ describe("BinaryOptions", function () {
           }
         }
       }
-      console.log("Metric         DeFiMath  Haptic");
-      console.log("Max abs error  ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "    " + (avgGas2 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath", "Haptic"],
+        [
+          ["Max abs error", e1(maxError1), e1(maxError2)],
+          ["Avg gas", avg(avgGas1, count), avg(avgGas2, count)],
+        ]
+      );
     });
 
     it("put", async function () {
@@ -145,9 +149,13 @@ describe("BinaryOptions", function () {
           }
         }
       }
-      console.log("Metric         DeFiMath  Haptic");
-      console.log("Max abs error  ", (maxError1).toExponential(1) + "  ", (maxError2).toExponential(1));
-      console.log("Avg gas           ", (avgGas1 / count).toFixed(0), "    " + (avgGas2 / count).toFixed(0));
+      printMetrics(
+        ["Metric", "DeFiMath", "Haptic"],
+        [
+          ["Max abs error", e1(maxError1), e1(maxError2)],
+          ["Avg gas", avg(avgGas1, count), avg(avgGas2, count)],
+        ]
+      );
     });
 
     // Binary greeks — Haptic does not implement them, DeFiMath-only.
@@ -175,9 +183,13 @@ describe("BinaryOptions", function () {
           }
         }
       }
-      console.log("Metric         DeFiMath  Haptic");
-      console.log("Max abs error  ", maxError.toExponential(1), "       —");
-      console.log("Avg gas           ", (avgGas / count).toFixed(0), "       —");
+      printMetrics(
+        ["Metric", "DeFiMath", "Haptic"],
+        [
+          ["Max abs error", e1(maxError), "—"],
+          ["Avg gas", avg(avgGas, count), "—"],
+        ]
+      );
     }
 
     it("delta", async function () {

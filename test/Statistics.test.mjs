@@ -1,7 +1,7 @@
 
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import * as ss from "simple-statistics";
-import { tokens } from "./Common.test.mjs";
+import { tokens, printMetrics, e1, avg } from "./Common.test.mjs";
 
 const SEC_PER_DAY = 86400;
 const SEC_PER_YEAR = 31536000;
@@ -94,9 +94,7 @@ describe("Statistics", function () {
     ];
 
     function report(maxError, avgGas, count) {
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     }
 
     it("geometricMean", async function () {

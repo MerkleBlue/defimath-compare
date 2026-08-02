@@ -1,6 +1,6 @@
 
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
-import { tokens, SEC_IN_DAY, SEC_IN_YEAR } from "./Common.test.mjs";
+import { tokens, SEC_IN_DAY, SEC_IN_YEAR, printMetrics, e1, avg } from "./Common.test.mjs";
 
 // JS reference: continuous-compounding YTM for a zero-coupon bond
 function jsYieldToMaturity(price, faceValue, timeToMaturity) {
@@ -55,9 +55,7 @@ describe("Rates", function () {
           }
         }
       }
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     });
 
     it("presentValue", async function () {
@@ -79,9 +77,7 @@ describe("Rates", function () {
           }
         }
       }
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     });
 
     it("logReturn", async function () {
@@ -101,9 +97,7 @@ describe("Rates", function () {
           maxError = Math.max(maxError, relErr(y, expected));
         }
       }
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     });
 
     it("continuousToDiscrete", async function () {
@@ -119,9 +113,7 @@ describe("Rates", function () {
         count++;
         maxError = Math.max(maxError, relErr(y, expected));
       }
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     });
 
     it("discreteToContinuous", async function () {
@@ -137,9 +129,7 @@ describe("Rates", function () {
         count++;
         maxError = Math.max(maxError, relErr(y, expected));
       }
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     });
 
     it("yieldToMaturity", async function () {
@@ -162,9 +152,7 @@ describe("Rates", function () {
           }
         }
       }
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     });
 
     it("internalRateOfReturn", async function () {
@@ -187,9 +175,7 @@ describe("Rates", function () {
         count++;
         maxError = Math.max(maxError, relErr(y, expected));
       }
-      console.log("Metric            DeFiMath");
-      console.log("Max rel error     ", maxError.toExponential(1));
-      console.log("Avg gas               ", (avgGas / count).toFixed(0));
+      printMetrics(["Metric", "DeFiMath"], [["Max rel error", e1(maxError)], ["Avg gas", avg(avgGas, count)]]);
     });
   });
 });
