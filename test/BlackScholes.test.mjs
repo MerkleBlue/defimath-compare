@@ -242,7 +242,7 @@ describe("BlackScholes", function () {
               const expected = greeks.getGamma(1000, strike, time / 365, vol, rate, "call");
 
               const result1 = await options.gammaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
-              const price1 = result1.gamma.toString() / 1e18;
+              const price1 = result1.gammaOut.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
               count++;
@@ -323,7 +323,7 @@ describe("BlackScholes", function () {
               const expected = greeks.getVega(1000, strike, time / 365, vol, rate, "call");
 
               const result1 = await options.vegaMG(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
-              const price1 = result1.vega.toString() / 1e18;
+              const price1 = result1.vegaOut.toString() / 1e18;
               avgGas1 += parseInt(result1.gasUsed);
 
               const result2 = await adapterDerivexyz.vega(tokens(1000), tokens(strike), time * SEC_IN_DAY, tokens(vol), tokens(rate));
