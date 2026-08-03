@@ -1,8 +1,10 @@
 
+import { assert } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import bs from "black-scholes";
 import greeks from "greeks";
 import { tokens, SEC_IN_DAY, printMetrics, e1, relOrDash, avg } from "./Common.test.mjs";
+import { AVG_GAS_CALL, AVG_GAS_PUT, AVG_GAS_DELTA, AVG_GAS_GAMMA, AVG_GAS_THETA, AVG_GAS_VEGA } from "defimath-lib/constants/Constants.mjs";
 
 // bs has a bug with time = 0, it returns NaN, so we are wrapping it
 function blackScholesWrapped(spot, strike, time, vol, rate, callOrPut) {
@@ -104,6 +106,7 @@ describe("BlackScholes", function () {
           ["Avg gas", avg(avgGas1, count), avg(avgGas2, count), avg(avgGas3, count), avg(avgGas4, count), avg(avgGas5, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_CALL, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_CALL (${AVG_GAS_CALL})`);
     });
 
     it("put", async function () {
@@ -169,6 +172,7 @@ describe("BlackScholes", function () {
           ["Avg gas", avg(avgGas1, count), avg(avgGas2, count), avg(avgGas3, count), avg(avgGas4, count), avg(avgGas5, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_PUT, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_PUT (${AVG_GAS_PUT})`);
     });
 
     it("delta", async function () {
@@ -216,6 +220,7 @@ describe("BlackScholes", function () {
           ["Avg gas", avg(avgGas1, count), avg(avgGas2, count), avg(avgGas4, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_DELTA, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_DELTA (${AVG_GAS_DELTA})`);
     });
 
     it("gamma", async function () {
@@ -253,6 +258,7 @@ describe("BlackScholes", function () {
           ["Avg gas", avg(avgGas1, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_GAMMA, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_GAMMA (${AVG_GAS_GAMMA})`);
     });
 
     it("theta", async function () {
@@ -294,6 +300,7 @@ describe("BlackScholes", function () {
           ["Avg gas", avg(avgGas1, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_THETA, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_THETA (${AVG_GAS_THETA})`);
     });
 
     it("vega", async function () {
@@ -343,6 +350,7 @@ describe("BlackScholes", function () {
           ["Avg gas", avg(avgGas1, count), avg(avgGas2, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_VEGA, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_VEGA (${AVG_GAS_VEGA})`);
     });
   });
 });
