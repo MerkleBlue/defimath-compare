@@ -1,7 +1,9 @@
 
+import { assert } from "chai";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers.js";
 import erf from "math-erf";
 import { tokens, SEC_IN_DAY, printMetrics, e1, avg } from "./Common.test.mjs";
+import { AVG_GAS_BINARY_CALL, AVG_GAS_BINARY_PUT, AVG_GAS_BINARY_DELTA, AVG_GAS_BINARY_GAMMA, AVG_GAS_BINARY_THETA, AVG_GAS_BINARY_VEGA } from "defimath-lib/constants/Constants.mjs";
 
 // True-math binary (cash-or-nothing) Black-Scholes reference.
 //
@@ -114,6 +116,7 @@ describe("BinaryOptions", function () {
           ["Avg gas", avg(avgGas1, count), avg(avgGas2, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_BINARY_CALL, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_BINARY_CALL (${AVG_GAS_BINARY_CALL})`);
     });
 
     it("put", async function () {
@@ -156,6 +159,7 @@ describe("BinaryOptions", function () {
           ["Avg gas", avg(avgGas1, count), avg(avgGas2, count)],
         ]
       );
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_BINARY_PUT, `DeFiMath gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_BINARY_PUT (${AVG_GAS_BINARY_PUT})`);
     });
 
     // Binary greeks — Haptic does not implement them, DeFiMath-only.
@@ -166,7 +170,7 @@ describe("BinaryOptions", function () {
       rates: [0.05, 0.1, 0.2],
     };
 
-    async function benchGreek(contractFn, callKey, putKey) {
+    async function benchGreek(contractFn, callKey, putKey, expectedGas) {
       let maxError = 0, avgGas = 0, count = 0;
       for (const strike of greekGrid.strikes) {
         for (const time of greekGrid.times) {
@@ -190,26 +194,27 @@ describe("BinaryOptions", function () {
           ["Avg gas", avg(avgGas, count), "—"],
         ]
       );
+      assert.equal(Math.round(avgGas / count), expectedGas, `DeFiMath gas ${Math.round(avgGas / count)} ≠ expected (${expectedGas})`);
     }
 
     it("delta", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.deltaMG.bind(binary), "deltaCall", "deltaPut");
+      await benchGreek(binary.deltaMG.bind(binary), "deltaCall", "deltaPut", AVG_GAS_BINARY_DELTA);
     });
 
     it("gamma", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.gammaMG.bind(binary), "gammaCall", "gammaPut");
+      await benchGreek(binary.gammaMG.bind(binary), "gammaCall", "gammaPut", AVG_GAS_BINARY_GAMMA);
     });
 
     it("theta", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.thetaMG.bind(binary), "thetaCall", "thetaPut");
+      await benchGreek(binary.thetaMG.bind(binary), "thetaCall", "thetaPut", AVG_GAS_BINARY_THETA);
     });
 
     it("vega", async function () {
       const { binary } = await loadFixture(deployCompare);
-      await benchGreek(binary.vegaMG.bind(binary), "vegaCall", "vegaPut");
+      await benchGreek(binary.vegaMG.bind(binary), "vegaCall", "vegaPut", AVG_GAS_BINARY_VEGA);
     });
   });
 });
