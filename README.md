@@ -12,6 +12,7 @@ DeFiMath is benchmarked against:
 | :---------- | :-------- |
 | Math        | PRBMath, ABDK, Solady, SolStat |
 | Black-Scholes | Derivexyz, Premia, Party1983, Dopex |
+| Black-76    | — (no other on-chain implementations found) |
 | Binary      | Haptic |
 | Rates       | — (no other on-chain implementations found) |
 | Statistics  | — (no other on-chain implementations found) |
@@ -126,6 +127,10 @@ Option prices — and `theta` / `vega` for longer-dated options — exceed 1, so
 | `vega`   | **7.2e-16** |     7.3e-16 |      — |         — |     — |
 
 Dashes indicate the library doesn't implement that function. Dopex returns prices in a different scale and is benchmarked on gas only. Grids and parameters match [`test/BlackScholes.test.mjs`](test/BlackScholes.test.mjs); reproduce with `npx hardhat test test/BlackScholes.test.mjs`. Full module reference: [DeFiMath Black-Scholes options pricing and Greeks documentation](https://defimath.com/docs/black-scholes/).
+
+## Results — Black-76 (options on a future)
+
+No on-chain Black-76 implementation was found to benchmark against, so there is nothing to compare here. Black-76 prices European options on a forward/futures underlying and is exactly `e^(−r·τ) · Black-Scholes(spot = F, rate = 0)`, so its gas and precision track the Black-Scholes results above. Full module reference: [DeFiMath Black-76 documentation](https://defimath.com/docs/black-76/).
 
 ## Results — Binary (cash-or-nothing) options
 
