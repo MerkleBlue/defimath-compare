@@ -259,17 +259,7 @@ Solidity version, viaIR, and optimizer runs are pinned to the same values as in 
 
 ## Credits
 
-This project would not be possible without the open-source libraries it benchmarks against. Thanks to the authors and maintainers of:
-
-- [Derivexyz](https://github.com/derivexyz/v1-core/blob/master/contracts/libraries/BlackScholes.sol)
-- [Premia](https://github.com/Premian-Labs/premia-contracts/blob/master/contracts/libraries/OptionMath.sol)
-- [Party1983](https://github.com/partylikeits1983/black_scholes_solidity/blob/main/contracts/libraries/BlackScholesModel.sol)
-- [Dopex](https://github.com/code-423n4/2023-08-dopex/blob/main/contracts/libraries/BlackScholes.sol)
-- [PRBMath](https://github.com/PaulRBerg/prb-math)
-- [ABDK](https://github.com/abdk-consulting/abdk-libraries-solidity)
-- [Solady](https://github.com/Vectorized/solady)
-- [SolStat](https://github.com/primitivefinance/solstat)
-- [Haptic](https://github.com/HapticFinance/binaries-pricing-model)
+This project would not be possible without the open-source libraries it benchmarks against — thanks to their authors and maintainers. Every one is listed under [Benchmarked library versions](#benchmarked-library-versions), with its exact version, source, and per-library provenance (including licenses) recorded there and in each adapter's `PROVENANCE.md`.
 
 ## License
 
