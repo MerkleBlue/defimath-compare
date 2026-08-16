@@ -6,13 +6,13 @@ import erf from 'math-erf';
 import { tokens, sqrtExactWei, relError } from "./Common.test.mjs";
 import {
   AVG_GAS_EXP, AVG_GAS_LN, AVG_GAS_LOG2, AVG_GAS_LOG10, AVG_GAS_POW,
-  AVG_GAS_SQRT, AVG_GAS_CBRT, AVG_GAS_ERF, AVG_GAS_CDF,
+  AVG_GAS_SQRT, AVG_GAS_CBRT, AVG_GAS_ERF, AVG_GAS_CDF, AVG_GAS_PDF,
   MAX_REL_ERROR_EXP, MAX_ABS_ERROR_EXP,
   MAX_REL_ERROR_LN, MAX_ABS_ERROR_LN,
   MAX_REL_ERROR_POW, MAX_ABS_ERROR_POW,
   MAX_REL_ERROR_SQRT, MAX_ABS_ERROR_SQRT,
   MAX_REL_ERROR_CBRT, MAX_ABS_ERROR_CBRT,
-  MAX_ABS_ERROR_ERF, MAX_ABS_ERROR_CDF,
+  MAX_ABS_ERROR_ERF, MAX_ABS_ERROR_CDF, MAX_ABS_ERROR_PDF,
 } from "defimath-lib/constants/Constants.mjs";
 
 // JS double machine epsilon (2^-52). Any error metric ≤ this is indistinguishable
@@ -547,6 +547,43 @@ describe("Math", function () {
       );
       assertHeadroom("stdNormCDF", { absMax: MAX_ABS_ERROR_CDF, absMeas: maxError1 });
       assert.equal(Math.round(avgGas1 / count), AVG_GAS_CDF, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_CDF (${AVG_GAS_CDF})`);
+    });
+
+    it("stdNormPDF", async function () {
+      const { deFiMath, solStat } = await loadFixture(deployCompare);
+
+      let maxError1 = 0, maxError4 = 0;
+      let avgGas1 = 0, avgGas4 = 0;
+      let count = 0;
+
+      // Synced with defimath's perf test grid: symmetric around 0, 1000 samples,
+      // both positive and negative inputs balanced.
+      for (let x = -6; x <= 6; x += 0.012) {
+        // black-scholes ships no density, so φ(x) = e^(−x²/2)/√(2π) is evaluated directly.
+        const expected = Math.exp(-x * x / 2) / Math.sqrt(2 * Math.PI);
+
+        const result1 = await deFiMath.stdNormPDFMG(tokens(x));
+        const y1 = result1.y.toString() / 1e18;
+        avgGas1 += parseInt(result1.gasUsed);
+
+        const result4 = await solStat.pdfMG(tokens(x));
+        const y4 = result4.y.toString() / 1e18;
+        avgGas4 += parseInt(result4.gasUsed);
+
+        count++;
+        maxError1 = Math.max(maxError1, Math.abs(y1 - expected));
+        maxError4 = Math.max(maxError4, Math.abs(y4 - expected));
+      }
+      printTable(
+        ["DeFiMath", "SolStat"],
+        [
+          ["Max abs error", maxError1.toExponential(1), maxError4.toExponential(1)],
+          ["Avg gas", (avgGas1 / count).toFixed(0), (avgGas4 / count).toFixed(0)],
+        ],
+        `Samples: ${count} (abs only — output bounded by 1/√(2π))`,
+      );
+      assertHeadroom("stdNormPDF", { absMax: MAX_ABS_ERROR_PDF, absMeas: maxError1 });
+      assert.equal(Math.round(avgGas1 / count), AVG_GAS_PDF, `DeFiMath avg gas ${Math.round(avgGas1 / count)} ≠ AVG_GAS_PDF (${AVG_GAS_PDF})`);
     });
 
     it("erf", async function () {

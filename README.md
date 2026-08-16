@@ -71,6 +71,7 @@ Avg gas            2582      13360   20623      35963   88969
 | `sqrt`       |     **197** |     974 |      808 |     384 |       — |
 | `cbrt`       |     **340** |       — |        — |     550 |       — |
 | `stdNormCDF` |     **618** |       — |        — |       — |   3,103 |
+| `stdNormPDF` |     **320** |       — |        — |       — |     761 |
 | `erf`        |     **649** |       — |        — |       — |   2,876 |
 
 ### Max relative error
@@ -85,9 +86,10 @@ Avg gas            2582      13360   20623      35963   88969
 | `sqrt`       | **4.8e-19** | **4.8e-19** | **4.8e-19** | **4.8e-19** |        — |
 | `cbrt`       | **2.2e-16** |           — |           — | **2.2e-16** |        — |
 | `stdNormCDF` | **1.4e-15** |           — |           — |           — |   3.2e-8 |
+| `stdNormPDF` | **<2.2e-16** |          — |           — |           — | **<2.2e-16** |
 | `erf`        | **2.1e-16** |           — |           — |           — |   5.7e-8 |
 
-All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measured on x ∈ [0.5, 10] — away from erf's zero at x = 0, where relative error would be ill-defined (both functions are bounded, in [0, 1] and [−1, 1]). Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
+All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measured on x ∈ [0.5, 10] — away from erf's zero at x = 0, where relative error would be ill-defined (both functions are bounded, in [0, 1] and [−1, 1]). `stdNormPDF` is bounded by its peak 1/√(2π) ≈ 0.399 and is reported as **absolute** error on x ∈ [−6, 6]; `<2.2e-16` marks a measurement at or below JS double machine epsilon, i.e. indistinguishable from the reference's own rounding noise — both implementations reduce to one `exp` here, so neither is separable from the reference. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
 
 `expm1` and `log1p` are not benchmarked here: their domain of interest is near the root (`|result| < 1`), where the correct error metric is absolute, not the relative error this table reports. Their gas and precision are documented in [defimath](https://github.com/MerkleBlue/defimath) and at [defimath.com/docs/math](https://defimath.com/docs/math/).
 

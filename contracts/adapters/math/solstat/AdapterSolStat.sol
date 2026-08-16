@@ -18,6 +18,19 @@ contract AdapterSolStat {
         return (y, startGas - endGas);
     }
 
+    function pdfMG(int256 x) external view returns (int256 y, uint256 gasUsed) {
+        uint256 startGas;
+        uint256 endGas;
+
+        startGas = gasleft();
+
+        y = Gaussian.pdf(x);
+
+        endGas = gasleft();
+
+        return (y, startGas - endGas);
+    }
+
     function erfMG(int256 x) external view returns (int256 y, uint256 gasUsed) {
         uint256 startGas;
         uint256 endGas;
