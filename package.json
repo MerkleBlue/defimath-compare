@@ -1,6 +1,6 @@
 {
   "name": "defimath-compare",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": true,
   "description": "Gas and precision benchmarks comparing defimath against other Solidity math and options libraries.",
   "homepage": "https://defimath.com",
@@ -14,7 +14,7 @@
     "postinstall": "node scripts/link-local-defimath.mjs"
   },
   "dependencies": {
-    "defimath-lib": "^4.0.0"
+    "defimath-lib": "^4.1.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "6.1.2",
