@@ -70,7 +70,7 @@ Avg gas            2582      13360   20623      35963   88969
 | `pow`        |     **761** |   9,943 |        — |     976 |       — |
 | `sqrt`       |     **197** |     974 |      808 |     384 |       — |
 | `cbrt`       |     **340** |       — |        — |     550 |       — |
-| `stdNormCDF` |     **618** |       — |        — |       — |   3,103 |
+| `stdNormCDF` |     **618** |       — |        — |       — |   3,115 |
 | `stdNormPDF` |     **320** |       — |        — |       — |     761 |
 | `erf`        |     **649** |       — |        — |       — |   2,876 |
 
@@ -78,18 +78,18 @@ Avg gas            2582      13360   20623      35963   88969
 
 | Function     |    DeFiMath |     PRBMath |    ABDKQuad |      Solady |  SolStat |
 | :----------- | ----------: | ----------: | ----------: | ----------: | -------: |
-| `exp`        | **1.9e-14** | **1.9e-14** | **1.9e-14** | **1.9e-14** |        — |
-| `ln`         | **2.8e-16** | **2.8e-16** | **2.8e-16** | **2.8e-16** |        — |
-| `log2`       | **3.6e-16** | **3.6e-16** | **3.6e-16** |           — |        — |
-| `log10`      | **2.2e-16** | **2.2e-16** |           — |           — |        — |
-| `pow`        | **6.1e-16** | **6.1e-16** |           — | **6.1e-16** |        — |
-| `sqrt`       | **4.8e-19** | **4.8e-19** | **4.8e-19** | **4.8e-19** |        — |
-| `cbrt`       | **2.2e-16** |           — |           — | **2.2e-16** |        — |
-| `stdNormCDF` | **1.4e-15** |           — |           — |           — |   3.2e-8 |
+| `exp`        | **2.2e-15** | **2.2e-15** | **2.2e-15** | **2.2e-15** |        — |
+| `ln`         | **2.9e-16** | **2.9e-16** | **2.9e-16** | **2.9e-16** |        — |
+| `log2`       | **3.4e-16** | **3.4e-16** | **3.4e-16** |           — |        — |
+| `log10`      | **<2.2e-16** | **<2.2e-16** |          — |           — |        — |
+| `pow`        | **1.3e-15** | **1.3e-15** |           — | **1.3e-15** |        — |
+| `sqrt`       | **1.0e-18** | **1.0e-18** | **1.0e-18** | **1.0e-18** |        — |
+| `cbrt`       | **2.6e-16** |           — |           — | **2.6e-16** |        — |
+| `stdNormCDF` | **1.5e-15** |           — |           — |           — |   4.1e-8 |
 | `stdNormPDF` | **<2.2e-16** |          — |           — |           — | **<2.2e-16** |
-| `erf`        | **2.1e-16** |           — |           — |           — |   5.7e-8 |
+| `erf`        | **<2.2e-16** |          — |           — |           — |   8.2e-8 |
 
-All rows are relative error (fraction, not %). `stdNormCDF` and `erf` are measured on x ∈ [0.5, 10] — away from erf's zero at x = 0, where relative error would be ill-defined (both functions are bounded, in [0, 1] and [−1, 1]). `stdNormPDF` is bounded by its peak 1/√(2π) ≈ 0.399 and is reported as **absolute** error on x ∈ [−6, 6]; `<2.2e-16` marks a measurement at or below JS double machine epsilon, i.e. indistinguishable from the reference's own rounding noise — both implementations reduce to one `exp` here, so neither is separable from the reference. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs); reproduce with `npx hardhat test test/Math.test.mjs`. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
+Rows are **relative** error (fraction, not %) for `exp` through `cbrt`, and **absolute** error for the three bounded functions — `stdNormCDF` ∈ [0, 1], `stdNormPDF` ∈ [0, 1/√(2π)], `erf` ∈ [−1, 1] — which pass through or approach a root where relative error is ill-defined. That is the same metric split the test suite applies. `<2.2e-16` marks a measurement at or below JS double machine epsilon: indistinguishable from the reference's own rounding noise, so cells at the wall are not separable from the reference *or from each other*. Bold entries mark the best (lowest) value in each row; ties bold all leaders. Every library in a row is measured on the identical sweep, so the columns are directly comparable; grids and parameters match the test sources in [`test/Math.test.mjs`](test/Math.test.mjs) — reproduce with `npx hardhat test test/Math.test.mjs`. Each test also prints a `DeFiMath stats: … Nx below max` line showing headroom against the bound DeFiMath publishes in [`Constants.mjs`](https://github.com/MerkleBlue/defimath/blob/master/constants/Constants.mjs); the suite asserts every measurement above stays under its bound. Full module reference: [DeFiMath math primitives documentation](https://defimath.com/docs/math/).
 
 `expm1` and `log1p` are not benchmarked here: their domain of interest is near the root (`|result| < 1`), where the correct error metric is absolute, not the relative error this table reports. Their gas and precision are documented in [defimath](https://github.com/MerkleBlue/defimath) and at [defimath.com/docs/math](https://defimath.com/docs/math/).
 
